@@ -1,10 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-/* GET users listing. */
+console.log('trace: /api/blog/blog.js');
+
 router.get('/', (req, res)=>{
     res.status(200).send({ 
-        message: "this is /api/signin"
+        message: "this is /api/blog/blog"
     })
 })
 

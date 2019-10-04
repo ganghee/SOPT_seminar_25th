@@ -1,13 +1,13 @@
 var express = require('express');
 var router = express.Router();
 
-router.use('/api', require('./api'));
+router.use('/like', require('./like'));
 
-console.log('trace: index.js');
+console.log('trace: /api/news/like/index.js');
 
 router.get('/', (req, res)=>{
     res.status(200).send({ 
-        message: "this is /"
+        message: "this is /api/news/like/index"
     })
 })
 
