@@ -1,5 +1,7 @@
 #### 1차 세미나 과제
 
+1. [PR 자바스크립트 정리](https://github.com/WITH-SOPT-SERVER/SHARED-LEARNING/pull/64/commits/2e97cfb454f0149a15ac42bf16972f61cae29e5b)
+
 2. 
    |localhost:3000/api/cafe|localhost:3000/api/blog|localhost:3000/api/news|localhost:3000/api/news/like|
    |:---:|:---:|:---:|:---:|
