@@ -111,29 +111,25 @@ http.createServer((req, res)=>{
 
    - **4.1 라우팅 따라가기**
 
-     - package.json \
+     - **package.json** \
      ./bin/www 파일 실행
 
-     - ./bin/www \
+     - **./bin/www** \
     app 변수를 통해서 ../app(app.js)를 가져온다. port를 지정하고, server를 구동하는 코드들이 있다.
-     - App.js
-      
-      app.use('/',indexRouter);
-      app.use('/users',usersRouter);
-      
-      
+
+     - **App.js** \
+      app.use('/',indexRouter); \
+      app.use('/users',usersRouter); \
       인덱스 파일은 '/'에 연결되며, users.js파일은 /users에 연결된다.
 
-      localhost:3000 => indexRouter(index.js) \
-      localhost:3000/users => usersRouter(users.js)
+        localhost:3000 => indexRouter(index.js) \
+        localhost:3000/users => usersRouter(users.js)
 
-      - Index.js, Users.js \
-      request를 받아서 response를 처리하는 로직이 들어간다.
-
-      
-      router.{METHOD}():
-      현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다.
-      ※ method에는 get, post, put, delete등이 있습니다
+      - **Index.js, Users.js** \
+        request를 받아서 response를 처리하는 로직이 들어간다. \
+        router.{METHOD}():
+        현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다. \
+        ※ method에는 get, post, put, delete등이 있습니다
       
 
 ### 5. 내장 모듈 소개
@@ -156,7 +152,7 @@ http.createServer((req, res)=>{
         console.log(qdata.id); //returns '5221'
         ```
 
-    - **5.2 query string**
+   - **5.2 query string**
 
         ![image](https://user-images.githubusercontent.com/35513039/66933697-68678c80-f074-11e9-9b00-a60188add641.png)
 
@@ -167,13 +163,13 @@ http.createServer((req, res)=>{
         console.log(querystring.stringify(qObj));
         ```
 
-    - **5.3 util**
+   - **5.3 util**
 
         ```
         var data = util.format('%d, %s, %j', 25, 'sopt', { name: 'heesung youn'}); console.log(data); //returns '25, sopt, {"name": "heesung youn"}'
         ```
 
-    - **5.4 crypto**
+   - **5.4 crypto**
 
         ```
         var crypto = require('crypto');
@@ -198,7 +194,7 @@ http.createServer((req, res)=>{
         console.log('복호화된 문자열: ' + decipheredOutput);
         ```
 
-    - **5.5 fs**
+   - **5.5 fs**
 
         ```
         var fs = require('fs');
