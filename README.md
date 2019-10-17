@@ -19,15 +19,15 @@ http.createServer((req, res)=>{
 
 ### 2. Express를 이용한 Server 구현
 
-   **Express** : 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크입니다.
+   - **Express** : 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크입니다.
 
-   **설치** \
+   - **설치** \
    `$ npm install express --save`
 
-   **프로젝트 생성** \
+   - **프로젝트 생성** \
    `express [projectName]`
 
-   **실행** \
+   - **실행** \
    프로젝트 레벨에서 실행 \
    `cd [projectName]` \
    `npm install`\
@@ -35,16 +35,16 @@ http.createServer((req, res)=>{
 
 ### 3. javascript 기초
 
-    3.1 기본자료형 : Boolean, Number, String, Null, Undefined, Symbol 
++ 3.1 기본자료형 : Boolean, Number, String, Null, Undefined, Symbol 
 
-    3.2 객체 
-    
-    - Function, Array, Object
-    - 관련된 데이터와 함수(property와 method)의 집합
-    - {} 키워드
-    - memberName: memberValue형태
-    - 모든 객체는 JSON으로 표기가 가능하다.
-    - JSON 표기법으로 객체를 만들 수 있다.
++ 3.2 객체 
+
+  - Function, Array, Object
+  - 관련된 데이터와 함수(property와 method)의 집합
+  - {} 키워드
+  - memberName: memberValue형태
+  - 모든 객체는 JSON으로 표기가 가능하다.
+  - JSON 표기법으로 객체를 만들 수 있다.
     ```
     var person = {};
     var object = { 
@@ -53,10 +53,10 @@ http.createServer((req, res)=>{
     };
     ```
 
-    3.3 배열
-    - 자바스크립트에서 배열은 객체다. 즉 다양한 메소드를 지원한다.
-    - 자바스크립트에서 배열에는 어떤 값도 들어 갈 수 있다.
-    - [] 키워드를 이용해서 표현
+- 3.3 배열
+  - 자바스크립트에서 배열은 객체다. 즉 다양한 메소드를 지원한다.
+  - 자바스크립트에서 배열에는 어떤 값도 들어 갈 수 있다.
+  - [] 키워드를 이용해서 표현
 
     ```
     var array1 = [];
@@ -64,10 +64,10 @@ http.createServer((req, res)=>{
     var array3 = [“윤희성”, 3, 4.5, false, {name: “heesung”, part: ”server”}];
     ```
 
-    3.4 함수
-    - 자바스크립트에서 함수는 객체다
-    - 함수를 생성하는 방법에는 함수 선언식과 함수 표현식이 있다.
-    - 호이스팅에 영향을 받는 함수 선언식
+- 3.4 함수
+  - 자바스크립트에서 함수는 객체다
+  - 함수를 생성하는 방법에는 함수 선언식과 함수 표현식이 있다.
+  - 호이스팅에 영향을 받는 함수 선언식
     ```
     function add(x, y){ 
         return x + y;
@@ -83,19 +83,19 @@ http.createServer((req, res)=>{
     }
     ```
 
-    3.5 일급 객체
-    - 변수 or 데이터 구조에 담을 수 있다.
-    - 다른 함수의 파라미터로 전달할 수 있다.
-    - 반환 값으로 사용할 수 있다.
-    - 런타임 시 생성될 수 있다.
+- 3.5 일급 객체
+  - 변수 or 데이터 구조에 담을 수 있다.
+  - 다른 함수의 파라미터로 전달할 수 있다.
+  - 반환 값으로 사용할 수 있다.
+  - 런타임 시 생성될 수 있다.
 
-    3.6 var, let, const
-    - 재 선언 가능 : 같은 이름의 변수를 다시 선언할 수 있다.
+- 3.6 var, let, const
+  - 재 선언 가능 : 같은 이름의 변수를 다시 선언할 수 있다.
     ```
     var a = 24;
     var a = 25;
     ```
-    - 재 할당 가능 : 변수가 새로운 값을 가질 수 있다. 
+  - 재 할당 가능 : 변수가 새로운 값을 가질 수 있다. 
     ```
     var a = 24;
     a = 25;
@@ -109,32 +109,32 @@ http.createServer((req, res)=>{
    
    라우팅은 URI(또는 경로) 및 특정한 HTTP 요청 메소드(GET, POST 등)인 특정 엔드포인트에 대한 클라이언트 요청에 애플리 케이션이 응답하는 방법을 결정하는 것을 말합니다.
 
-   4.1 라우팅 따라가기
+   - 4.1 라우팅 따라가기
 
-   - package.json \
-   ./bin/www 파일 실행
+     - package.json \
+     ./bin/www 파일 실행
 
-   - ./bin/www \
-  app 변수를 통해서 ../app(app.js)를 가져온다. port를 지정하고, server를 구동하는 코드들이 있다.
-   - App.js
-    
-    app.use('/',indexRouter);
-    app.use('/users',usersRouter);
-    
-    
-    인덱스 파일은 '/'에 연결되며, users.js파일은 /users에 연결된다.
+     - ./bin/www \
+    app 변수를 통해서 ../app(app.js)를 가져온다. port를 지정하고, server를 구동하는 코드들이 있다.
+     - App.js
+      
+      app.use('/',indexRouter);
+      app.use('/users',usersRouter);
+      
+      
+      인덱스 파일은 '/'에 연결되며, users.js파일은 /users에 연결된다.
 
-    localhost:3000 => indexRouter(index.js) \
-    localhost:3000/users => usersRouter(users.js)
+      localhost:3000 => indexRouter(index.js) \
+      localhost:3000/users => usersRouter(users.js)
 
-    - Index.js, Users.js \
-    request를 받아서 response를 처리하는 로직이 들어간다.
+      - Index.js, Users.js \
+      request를 받아서 response를 처리하는 로직이 들어간다.
 
-    
-    router.{METHOD}():
-    현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다.
-    ※ method에는 get, post, put, delete등이 있습니다
-    
+      
+      router.{METHOD}():
+      현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다.
+      ※ method에는 get, post, put, delete등이 있습니다
+      
 
 ### 5. 내장 모듈 소개
 
