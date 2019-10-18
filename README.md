@@ -1,87 +1,85 @@
-# SOPT 25th Server part
+# 🌟 SOPT 25th Server part 🌟
 - [1차 세미나](##1차-세미나) - 자바스크립트 기초, 라우팅, 내장 모듈
 - [2차 세미나](##2차-세미나) - Node.js, 동기 비동기, Promise, async/await
-
-
-## 1차 세미나
 ------------
-### 1. HTTP 모듈을 이용한 Server 구현
-```
-const http = require('http');
+## 🔥 1차 세미나
+### 🍀1. HTTP 모듈을 이용한 Server 구현
+   ```
+   const http = require('http');
 
-http.createServer((req, res)=>{
-    console.log(`get message: ${req.url}`);
-    res.writeHead(200, {'Content-Type': 'text/plain'});
-    res.write('Hello nodejs');
-    res.end();
-}).listen(3000);
-```
+   http.createServer((req, res)=>{
+        console.log(`get message: ${req.url}`);
+        res.writeHead(200, {'Content-Type': 'text/plain'});
+        res.write('Hello nodejs');
+        res.end();
+   }).listen(3000);
+   ```
 
-### 2. Express를 이용한 Server 구현
+### 🍀2. Express를 이용한 Server 구현
 
-   - **Express** : 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크입니다.
+  - **Express** : 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크입니다.
 
-   - **설치** \
-   `$ npm install express --save`
+  - **설치** \
+  `$ npm install express --save`
 
-   - **프로젝트 생성** \
-   `express [projectName]`
+  - **프로젝트 생성** \
+  `express [projectName]`
 
-   - **실행** \
-   프로젝트 레벨에서 실행 \
-   `cd [projectName]` \
-   `npm install`\
-   `npm start`
+  - **실행** \
+  프로젝트 레벨에서 실행 \
+  `cd [projectName]` \
+  `npm install`\
+  `npm start`
 
-### 3. javascript 기초
+### 🍀3. javascript 기초
 
 + **3.1 기본자료형** : Boolean, Number, String, Null, Undefined, Symbol 
 
 + **3.2 객체**
 
-  - Function, Array, Object
-  - 관련된 데이터와 함수(property와 method)의 집합
-  - {} 키워드
-  - memberName: memberValue형태
-  - 모든 객체는 JSON으로 표기가 가능하다.
-  - JSON 표기법으로 객체를 만들 수 있다.
-    ```
-    var person = {};
-    var object = { 
-        name: “윤희성”, 
-        part: “server”
-    };
-    ```
+    - Function, Array, Object
+    - 관련된 데이터와 함수(property와 method)의 집합
+    - {} 키워드
+    - memberName: memberValue형태
+    - 모든 객체는 JSON으로 표기가 가능하다.
+    - JSON 표기법으로 객체를 만들 수 있다.
+      ```
+      var person = {};
+      var object = { 
+          name: “윤희성”, 
+          part: “server”
+      };
+      ```
 
 - **3.3 배열**
-  - 자바스크립트에서 배열은 객체다. 즉 다양한 메소드를 지원한다.
-  - 자바스크립트에서 배열에는 어떤 값도 들어 갈 수 있다.
-  - [] 키워드를 이용해서 표현
+     - 자바스크립트에서 배열은 객체다. 즉 다양한 메소드를 지원한다.
+     - 자바스크립트에서 배열에는 어떤 값도 들어 갈 수 있다.
+     - [] 키워드를 이용해서 표현
 
-    ```
-    var array1 = [];
-    var array2 = [1, 2, 3, 4, 5];
-    var array3 = [“윤희성”, 3, 4.5, false, {name: “heesung”, part: ”server”}];
-    ```
+       ```
+        var array1 = [];
+        var array2 = [1, 2, 3, 4, 5];
+        var array3 = [“윤희성”, 3, 4.5, false, {name: “heesung”, part: ”server”}];
+       ```
 
 - **3.4 함수**
-  - 자바스크립트에서 함수는 객체다
-  - 함수를 생성하는 방법에는 함수 선언식과 함수 표현식이 있다.
-  - 호이스팅에 영향을 받는 함수 선언식
-    ```
-    function add(x, y){ 
-        return x + y;
-    }
-    ```
-    - 호이스팅에 영향을 받지 않는 함수 선언식
-    ```
-    var add = function(x, y) { 
-        return x + y;
-    }
-    var add = (x, y) => { 
-        return x + y;
-    }
-    ```
+    - 자바스크립트에서 함수는 객체다
+    - 함수를 생성하는 방법에는 함수 선언식과 함수 표현식이 있다.
+    - 호이스팅에 영향을 받는 함수 선언식
+      ```
+      function add(x, y){ 
+          return x + y;
+      }
+      ```
+      - 호이스팅에 영향을 받지 않는 함수 선언식
+      ```
+      var add = function(x, y) { 
+          return x + y;
+      }
+      var add = (x, y) => { 
+          return x + y;
+      }
+      ```
 
 - **3.5 일급 객체**
   - 변수 or 데이터 구조에 담을 수 있다.
@@ -105,7 +103,7 @@ http.createServer((req, res)=>{
     |재 선언 가능|재 선언 불가능|재 선언 불가능|
     |재 할당 가능|재 할당 가능|재 할당 불가능|
 
-### 4. 라우팅
+### 🍀4. 라우팅
    
    라우팅은 URI(또는 경로) 및 특정한 HTTP 요청 메소드(GET, POST 등)인 특정 엔드포인트에 대한 클라이언트 요청에 애플리 케이션이 응답하는 방법을 결정하는 것을 말합니다.
 
@@ -132,7 +130,7 @@ http.createServer((req, res)=>{
         ※ method에는 get, post, put, delete등이 있습니다
       
 
-### 5. 내장 모듈 소개
+### 🍀5. 내장 모듈 소개
 
    - **5.1 url**
 
@@ -208,9 +206,8 @@ http.createServer((req, res)=>{
         console.log('동기적 파일 쓰기 완료');
         ```
 
-## 2차 세미나
-------------
-### 1. node.js
+## 🔥 2차 세미나
+### 🍀 1. node.js
 
 **1.1 정의**
 
@@ -265,186 +262,186 @@ C언어로 만들어져서 낮은 수준의 기능들을 javascript에 매핑하
 - **Core Javascript** \
 Node.js API을 구현
 
-### 2. 동기/비동기
-   
+### 🍀 2. 동기/비동기
 ```
 function task1(){ 
-    setTimeout(function(){
-        console.log('task1'); }, 0);
-    }
+setTimeout(function(){
+    console.log('task1'); 
+    }, 0);
+}
 function task2(){
     console.log('task2'); 
-    }
+}
 function task3(){
     console.log('task3');
-    }
+}
 ```
 
 task1 : 비동기 \
 task2 : 동기\
 task3 : 동기
 
-2.1  **fs모듈: 동기 파일 쓰기**
+- 2.1   **fs모듈: 동기 파일 쓰기**
 
-```
-const fs = require('fs');
+    ```
+    const fs = require('fs');
 
-const numArr = [1, 2, 3, 4, 5];
-const fileCommonName = 'syncText';
-numArr.forEach((num) => {
-    const fileName = fileCommonName+num;
-    const data = `reserved message for the '${fileName}'`; 
-    fs.writeFileSync(`${fileName}.txt`, data); 
-    console.log(`file[${fileName}] write complete`);
-})
-```
+    const numArr = [1, 2, 3, 4, 5];
+    const fileCommonName = 'syncText';
+    numArr.forEach((num) => {
+        const fileName = fileCommonName+num;
+        const data = `reserved message for the '${fileName}'`; 
+        fs.writeFileSync(`${fileName}.txt`, data); 
+        console.log(`file[${fileName}] write complete`);
+    })
+    ```
 
-결과
-```
-file[syncText1] write complete
-file[syncText2] write complete
-file[syncText3] write complete 
-file[syncText4] write complete 
-file[syncText5] write complete
-```
+    결과
+    ```
+    file[syncText1] write complete
+    file[syncText2] write complete
+    file[syncText3] write complete 
+    file[syncText4] write complete 
+    file[syncText5] write complete
+    ```
 
-2.2 **fs모듈: 비동기 파일 쓰기**
+- 2.2 **fs모듈: 비동기 파일 쓰기**
 
-```
-const fs = require('fs');
-const numArr = [1, 2, 3, 4, 5];
-const fileCommonName = 'asyncText';
+    ```
+    const fs = require('fs');
+    const numArr = [1, 2, 3, 4, 5];
+    const fileCommonName = 'asyncText';
 
-numArr.forEach((num) => {
-    const fileName = fileCommonName+num;
-    const data = `reserved message for the '${fileName}'`; 
-    fs.writeFile(`${fileName}.txt`, data, ()=>{
-        console.log(`file[${fileName}] write complete`); 
-        });
-});
-```
+    numArr.forEach((num) => {
+        const fileName = fileCommonName+num;
+        const data = `reserved message for the '${fileName}'`; 
+        fs.writeFile(`${fileName}.txt`, data, ()=>{
+            console.log(`file[${fileName}] write complete`); 
+            });
+    });
+    ```
 
-결과
-```
-file[asyncText3] write complete 
-file[asyncText4] write complete 
-file[asyncText2] write complete 
-file[asyncText1] write complete 
-file[asyncText5] write complete
-```
+    결과
+    ```
+    file[asyncText3] write complete 
+    file[asyncText4] write complete 
+    file[asyncText2] write complete 
+    file[asyncText1] write complete 
+    file[asyncText5] write complete
+    ```
 
-2.3 **Cypto pbkdf2**
+- 2.3 **Cypto pbkdf2**
 
-가장 많이 사용되는 key derivation function
-해시 함수의 컨테이너인 PBKDF2는 솔트를 적용한 후 해시 함수의 반복 횟수를 임의로 선택한다. \
-PBKDF2는 아주 가볍고 구현하기 쉬우며, SHA와 같이 검증된 해시 함수만을 사용한다
+    가장 많이 사용되는 key derivation function
+    해시 함수의 컨테이너인 PBKDF2는 솔트를 적용한 후 해시 함수의 반복 횟수를 임의로 선택한다. \
+    PBKDF2는 아주 가볍고 구현하기 쉬우며, SHA와 같이 검증된 해시 함수만을 사용한다
 
-![image](https://user-images.githubusercontent.com/35513039/66986310-a0fd7980-f0f9-11e9-8078-cd53a38d900d.png)
+    ![image](https://user-images.githubusercontent.com/35513039/66986310-a0fd7980-f0f9-11e9-8078-cd53a38d900d.png)
 
-- **Hash** \
-해시 알고리즘은 문자열을 특정 규칙을 이용해 다른 문자열로 치환하는 방식 해시 알고리즘으로는 sha256, sha512 등
+    - **Hash** \
+    해시 알고리즘은 문자열을 특정 규칙을 이용해 다른 문자열로 치환하는 방식 해시 알고리즘으로는 sha256, sha512 등
 
--  **Salt** \
-해시 알고리즘으로 암호화 하기 전에 우선 평문 암호에 salt라고 불리는 임의의 문자열을 붙인 후 암호화 이렇게 하여 원본 암호를 더 찾기 어렵게 만든다.
+    -  **Salt** \
+    해시 알고리즘으로 암호화 하기 전에 우선 평문 암호에 salt라고 불리는 임의의 문자열을 붙인 후 암호화 이렇게 하여 원본 암호를 더 찾기 어렵게 만든다.
 
-- **Key stretching** \
-해시 알고리즘으로 암호화 하기 전에 우선 평문 암호에 salt라고 불리는 임의의 문자열을 붙인 후 암호화 이렇게 하여 원본 암호를 더 찾기 어렵게 만든다.
+    - **Key stretching** \
+    해시 알고리즘으로 암호화 하기 전에 우선 평문 암호에 salt라고 불리는 임의의 문자열을 붙인 후 암호화 이렇게 하여 원본 암호를 더 찾기 어렵게 만든다.
 
-- **Pbkdf2** \
-PRF: 난수(예: HMAC) \
-Password: 패스워드 \
-Salt: 암호학 솔트 \
-c: 원하는 iteration 반복 수 \
-DLen: 원하는 다이제스트 길이
+    - **Pbkdf2** \
+    PRF: 난수(예: HMAC) \
+    Password: 패스워드 \
+    Salt: 암호학 솔트 \
+    c: 원하는 iteration 반복 수 \
+    DLen: 원하는 다이제스트 길이
 
-```
-const crypto = require('crypto’); const fs = require('fs');
-const password = 'password'; crypto.randomBytes(32, (err, salt) => {
-    if(err) throw err;
-    crypto.pbkdf2(password, salt, 1, 32, 'sha512', (err, derivedKey) => {
+    ```
+    const crypto = require('crypto’); const fs = require('fs');
+    const password = 'password'; crypto.randomBytes(32, (err, salt) => {
         if(err) throw err;
-        fs.writeFile('password.txt', derivedKey.toString('hex'), (err) => {
+        crypto.pbkdf2(password, salt, 1, 32, 'sha512', (err, derivedKey) => {
             if(err) throw err;
-            console.log('complete write password'); 
-        })
-    }) 
-})
-```
-
-> 문제점
-> callback함수 안에 callback함수 안에 callback함수 안에 결과를 출력하는 로직
-> 이처럼 여러 콜백함수가 중첩되어 코드를 읽기 어려워지는 것을 콜백헬 이라고 한다.
-> 비동기 처리에는 다양한 장점이 있지만 이 Callback hell이 발생하는 문제점이 있다.
-
-## **Callback Hell을 최소화 하는 3가지 방법**
-
-- Keep your code shallow \
-콜백함수를 명시적으로 정의하여서 연결해주면 Callback hell을 최소화 할 수 있습니다.
+            fs.writeFile('password.txt', derivedKey.toString('hex'), (err) => {
+                if(err) throw err;
+                console.log('complete write password'); 
+            })
+        }) 
+    })
     ```
-    const crypto = require('crypto');
-    const fs = require('fs');
 
-    const password = 'password1234';
-    crypto.randomBytes(32, madeSaltFunc);
+    > 문제점
+    > callback함수 안에 callback함수 안에 callback함수 안에 결과를 출력하는 로직
+    > 이처럼 여러 콜백함수가 중첩되어 코드를 읽기 어려워지는 것을 콜백헬 이라고 한다.
+    > 비동기 처리에는 다양한 장점이 있지만 이 Callback hell이 발생하는 문제점이 있다.
 
-    function madeSaltFunc(err, salt) {
-        if(err) throw err;
-        crypto.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
-    }
-    function madeKeyFunc(err, derivedKey) {
-        if(err) throw err;
-        fs.writeFile('password.txt', derivedKey.toString('hex'), wroteFileFunc);
-    }
-    function wroteFileFunc(err) {
-        if(err) throw err;
-        console.log('complete write password');
-    }
-    ```
-- Modularize \
-작은 모듈을 만들고 이를 조립하여 큰 모듈을 만들어서 콜백 헬을 감소시키는 방법
-    ```
-    const fs = require('fs');
-    const encryption = require('./encryption');
+    ## **Callback Hell을 최소화 하는 3가지 방법**
 
-    const password = 'password1234';
-    encryption(password, (error, derivedKey) => {
-        fs.writeFile('password2.txt', derivedKey, wroteFileFunc);
+    - __Keep your code shallow__ \
+    콜백함수를 명시적으로 정의하여서 연결해주면 Callback hell을 최소화 할 수 있습니다.
+        ```
+        const crypto = require('crypto');
+        const fs = require('fs');
+
+        const password = 'password1234';
+        crypto.randomBytes(32, madeSaltFunc);
+
+        function madeSaltFunc(err, salt) {
+            if(err) throw err;
+            crypto.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
+        }
+        function madeKeyFunc(err, derivedKey) {
+            if(err) throw err;
+            fs.writeFile('password.txt', derivedKey.toString('hex'), wroteFileFunc);
+        }
         function wroteFileFunc(err) {
             if(err) throw err;
             console.log('complete write password');
         }
-    })
-    ```
+        ```
+    - __Modularize__ \
+    작은 모듈을 만들고 이를 조립하여 큰 모듈을 만들어서 콜백 헬을 감소시키는 방법
+        ```
+        const fs = require('fs');
+        const encryption = require('./encryption');
 
-    ```
-    const crypto = require('crypto');
-    const pbkdf2 = require('pbkdf2');
+        const password = 'password1234';
+        encryption(password, (error, derivedKey) => {
+            fs.writeFile('password2.txt', derivedKey, wroteFileFunc);
+            function wroteFileFunc(err) {
+                if(err) throw err;
+                console.log('complete write password');
+            }
+        })
+        ```
 
-    function encryptPBKDF2(password, next){
-        crypto.randomBytes(32, madeSaltFunc);
-        function madeSaltFunc(err, salt) {
-            if(err) throw err;
-            pbkdf2.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
+        ```
+        const crypto = require('crypto');
+        const pbkdf2 = require('pbkdf2');
+
+        function encryptPBKDF2(password, next){
+            crypto.randomBytes(32, madeSaltFunc);
+            function madeSaltFunc(err, salt) {
+                if(err) throw err;
+                pbkdf2.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
+            }
+            function madeKeyFunc(err, derivedKey) {
+                if(err) throw err;
+                next(err, derivedKey.toString('hex'));
+            }
         }
-        function madeKeyFunc(err, derivedKey) {
-            if(err) throw err;
-            next(err, derivedKey.toString('hex'));
-        }
-    }
 
-    module.exports = encryptPBKDF2;
-    ```
+        module.exports = encryptPBKDF2;
+        ```
 
-- Handle every single error \
-콜백 함수의 첫 번째 인자를 error 관련 값으로 지정
-    ```
-    run(function(err){
-        if(err) throw err
-        window.alert('done')
-    })
-    ```
+    - __Handle every single error__ \
+    콜백 함수의 첫 번째 인자를 error 관련 값으로 지정
+        ```
+        run(function(err){
+            if(err) throw err
+            window.alert('done')
+        })
+        ```
 
-### **3. Promise**
+### 🍀 **3. Promise**
 
 비동기 처리에 사용되는 객체 \
 프로미스 객체가 생성되는 순간 알 수 없는 값을 처리 \
@@ -594,7 +591,7 @@ csvtojson 모듈은 csv포맷에서 JSON으로 가져오는 모듈입니다.
     { id: 'starbucks', pw: 'JamongBlackHoneyTea', name: '스타벅스' } ]
     ```
 
-### **4. Async/Await**
+### 🍀 **4. Async/Await**
 
 ES6 이후에 나온 자바스크립트 비동기 패턴.
 기존의 비동기 처리 방식인 콜백함수와 Promise의 단점을 보완 하여 읽기 좋은 코드로 만들어 준다. \
@@ -620,7 +617,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     }  
     ```
 
-    - **Promise**
+- **Promise**
     ```
     function promiseVer(){
         fetchItems().then(resultItems => {
@@ -629,7 +626,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     }
     ```
 
-    - **Async/Await**
+- **Async/Await**
     ```
     async function asyncVer(){
         const resultItems = await fetchItems();
