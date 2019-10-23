@@ -375,9 +375,9 @@ task3 : 동기
 
     ## **Callback Hell을 최소화 하는 3가지 방법**
 
-    - __Keep your code shallow__ \
+    __1. Keep your code shallow__ \
     콜백함수를 명시적으로 정의하여서 연결해주면 Callback hell을 최소화 할 수 있습니다.
-        ```
+        
         const crypto = require('crypto');
         const fs = require('fs');
 
@@ -396,10 +396,12 @@ task3 : 동기
             if(err) throw err;
             console.log('complete write password');
         }
-        ```
-    - __Modularize__ \
+        
+    __2. Modularize__ \
     작은 모듈을 만들고 이를 조립하여 큰 모듈을 만들어서 콜백 헬을 감소시키는 방법
-        ```
+    
+    Practice-module-pbkdf-fix2.js
+
         const fs = require('fs');
         const encryption = require('./encryption');
 
@@ -411,9 +413,9 @@ task3 : 동기
                 console.log('complete write password');
             }
         })
-        ```
-
-        ```
+        
+    encryption.js
+        
         const crypto = require('crypto');
         const pbkdf2 = require('pbkdf2');
 
@@ -430,16 +432,16 @@ task3 : 동기
         }
 
         module.exports = encryptPBKDF2;
-        ```
+        
 
-    - __Handle every single error__ \
+    __3. Handle every single error__ \
     콜백 함수의 첫 번째 인자를 error 관련 값으로 지정
-        ```
+        
         run(function(err){
             if(err) throw err
             window.alert('done')
         })
-        ```
+        
 
 ### 🍀 **3. Promise**
 
