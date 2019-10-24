@@ -8,10 +8,19 @@ const groupFilePath = __dirname + '/../../public/csvs/group.csv';
 router.get('/',async(req, res)=>{
     try {
         const member = await csv().fromFile(memberFilePath);
+        const group = await csv().fromFile(groupFilePath);
+        let seminarMember = []
 
         if(!member) console.log(`file read err: ${err}`);
         else {
-            res.send(member);
+            for(let i in member){
+                for(let j in group){
+                    if(member[i].groupIdx == group[j].groupIdx){
+                        seminarMember.push({name: member[i].name, groupName: group[j].name});
+                    }
+                }
+            }
+            res.send(seminarMember);
         }
     } catch(err){
         console.log(`file read err : ${err}`);
@@ -22,7 +31,7 @@ router.get('/',async(req, res)=>{
 router.get('/:groupIdx',async(req,res) => {
     try{
         const member = await csv().fromFile(memberFilePath);
-        const group = await csv().fromFile(groupFilePath)
+        const group = await csv().fromFile(groupFilePath);
 
         if(!member || !group) console.log(`file read err: ${err}`);
 
