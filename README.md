@@ -681,7 +681,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     - Model: 추상화 된 개념별로 로직 관리 (User, Board...)
     - Module: 기능 단위의 로직 관리 (암호와, DB매니저, csv매니저...)
 
-- 2.2 model
+- **2.2 model**
     - **model/user.js**
 
         ```
@@ -740,7 +740,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
         module.exports = board
         ```
 
-- 2.3 routes
+- **2.3 routes**
     - **routes/user.js**
 
         ```
