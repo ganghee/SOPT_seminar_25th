@@ -20,7 +20,7 @@ const blog = {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
-                        responseMessage.X_CREATE_FAIL(THIS_LOG)
+                        responseMessage.NULL_VALUE
                     )
                 });
             } else{
@@ -87,9 +87,90 @@ const blog = {
             }
         });
     },
-    update: () => {
+    update: (body) => {
+        return new Promise(async(resolve,reject) => {
+            const {
+                blogIdx,
+                title,
+                content,
+                writer
+            } = body;
+
+            if(!blogIdx || !title || !content || !writer){
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.NULL_VALUE
+                    )
+                });
+            } else{
+                const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ?';
+                const getBlogResult = await db.queryParam_Parse(getBlogQuery,[body.blogIdx]);
+                console.log(getBlogResult);
+                if (getBlogResult.length == 0) {
+                    resolve({
+                        code: statusCode.NOT_FOUND,
+                        json: authUtil.successFalse(
+                            responseMessage.NULL_VALUE
+                        )
+                    });
+                }else{
+                    const putBlogQuery = 'UPDATE blog SET title = ?, content = ?, writer = ? WHERE blogIdx = ?';
+                    const putBlogResult = await db.queryParam_Parse(putBlogQuery,[title, content, writer, blogIdx])
+                    console.log(putBlogResult);
+
+                    if(!putBlogResult){
+                        resolve({
+                            code: statusCode.NOT_FOUND,
+                            json: authUtil.successFalse(
+                                responseMessage.X_UPDATE_FAIL(THIS_LOG)
+                            )
+                        });
+                    }else{
+                        resolve({
+                            code: statusCode.OK,
+                            json: authUtil.successTrue(
+                                responseMessage.X_UPDATE_SUCCESS(THIS_LOG)
+                        )});
+                    }
+                }
+            }
+        });
     },
-    remove: () => {
+    remove: (body) => {
+        return new Promise(async(resolve,reject) => {
+            const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ?';
+            const getBlogResult = await db.queryParam_Parse(getBlogQuery, [body.blogIdx] );
+
+            if (getBlogResult.length == 0) {
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.NULL_VALUE
+                    )
+                });
+            } else {
+                const deleteBlogQuery = 'DELETE FROM blog WHERE blogIdx = ?';
+                const deleteBlogResult = await db.queryParam_Parse(deleteBlogQuery,[body.blogIdx]);
+                console.log(deleteBlogResult);
+
+                if (!deleteBlogResult) {
+                    resolve({
+                        code: statusCode.NOT_FOUND,
+                        json: authUtil.successFalse(
+                            responseMessage.X_DELETE_FAIL(THIS_LOG)
+                        )
+                    });
+                } else { 
+                    resolve({
+                        code: statusCode.OK,
+                        json: authUtil.successTrue(
+                            responseMessage.X_DELETE_SUCCESS(THIS_LOG)
+                        )
+                    });
+                }
+            }
+        });
     }
 }
 module.exports = blog;

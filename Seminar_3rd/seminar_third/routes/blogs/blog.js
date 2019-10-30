@@ -43,36 +43,27 @@ router.post('/',(req,res) => {
     });
 });
 
-/**
- *  [PUT] localhost/blogs/
- *  블로그 수정하기
- */
 router.put('/',(req,res) => {
-    //TODO 1 parameter null check
-    const {} = req.body;
-    const json = {};
-    /**
-     *  TODO 2 Model에서 값 받아오기
-     */
-    Blog.update(json);
-    /**
-     *  TODO 3 결과값 출력
-     */
-    
+    Blog.update(req.body).then(({
+        code,
+        json
+    }) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+    });
 });
 
-/**
- *  [DELETE] localhost/blogs/
- *  블로그 삭제하기
- */
 router.delete('/',(req,res) => {
-    // TODO 1 parameter null check
-    const {} = req.body;
-    const json = {}
-    /**
-     * TODO 3 결과값 출력
-     */
-    res.status(statusCode.OK).send(authUtil.successTrue(
-        responseMessage.X_DELETE_SUCCESS(THIS_LOG)));
+    Blog.remove(req.body).then(({
+        code,
+        json
+    }) => {
+        res.status(code).send(json);
+    }).catch(err => {
+        console.log(err);
+        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+    })
 });
 module.exports = router;
