@@ -11,4 +11,4 @@
    [POST]카테고리 생성|[POST]게시글 생성|[POST]댓글 생성|
    |![image](https://user-images.githubusercontent.com/35513039/67882788-2a935980-fb86-11e9-88ce-145d04af8bd9.png)|![image](https://user-images.githubusercontent.com/35513039/67925869-e476de00-fbf7-11e9-8ef7-d28012732450.png)|![image](https://user-images.githubusercontent.com/35513039/67935508-50177600-fc0d-11e9-8c8e-180ba18d44c7.png)|
    [DELETE]카테고리 삭제|[DELETE]게시글 삭제|[DELETE]댓글 삭제|
-   |![image](https://user-images.githubusercontent.com/35513039/67882376-7eea0980-fb85-11e9-9d0d-84f125ff3c26.png)|![image](https://user-images.githubusercontent.com/35513039/67925982-2dc72d80-fbf8-11e9-9065-f21183362ab2.png)|![image](https://user-images.githubusercontent.com/35513039/67935561-750be900-fc0d-11e9-8376-49f300a0524e.png)|
+   |![image](https://user-images.githubusercontent.com/35513039/67960308-61787680-fc3d-11e9-83b9-f0e9e078a88d.png)|![image](https://user-images.githubusercontent.com/35513039/67960220-4574d500-fc3d-11e9-96eb-860f390532ec.png)|![image](https://user-images.githubusercontent.com/35513039/67935561-750be900-fc0d-11e9-8376-49f300a0524e.png)|
