@@ -13,4 +13,3 @@ module.exports = {
     SERVICE_UNAVAILABLE: 503, 
     DB_ERROR: 600,
     }
-    

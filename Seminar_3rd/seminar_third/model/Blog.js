@@ -5,7 +5,7 @@ const authUtil = require('../module/utils/authUtil');
 const db = require('../module/db/pool')
 const blogData = require('../module/data/blogData')
 
-const THIS_LOG = '블로그';
+const THIS_LOG = '카테고리';
 
 const blog = {
     create: (body) => {
@@ -15,7 +15,6 @@ const blog = {
                 content,
                 writer
             } = body;
-    
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -57,7 +56,7 @@ const blog = {
                 resolve({
                     code: statusCode.OK,
                     json: authUtil.successTrue(
-                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                        responseMessage.X_READ_SUCCESS(THIS_LOG),
                         blog
                 )});
             }

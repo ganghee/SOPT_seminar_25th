@@ -6,6 +6,7 @@ const responseMessage = require('../../module/utils/responseMessage');
 const authUtil = require('../../module/utils/authUtil');
 
 const Blog = require('../../model/Blog');
+router.use('/:blogIdx/articles', require('./articles'));
 
 router.get('/',(req,res) => {
     Blog.readAll().then(({
@@ -64,6 +65,6 @@ router.delete('/',(req,res) => {
     }).catch(err => {
         console.log(err);
         res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    })
+    });
 });
 module.exports = router;
