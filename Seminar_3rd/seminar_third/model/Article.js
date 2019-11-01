@@ -8,14 +8,12 @@ const articleData = require('../module/data/articleData');
 const THIS_LOG = '게시글';
 
 const article = {
-    create: (body,blogIdx) => {
+    create: ({
+        title,
+        content,
+        writer
+    },blogIdx) => {
         return new Promise(async(resolve,reject) => {
-            const {
-                title,
-                content,
-                writer
-            } = body;
-    
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -23,81 +21,73 @@ const article = {
                         responseMessage.NULL_VALUE
                     )
                 });
-            } else{
-                const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)';
-                const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx]);
-                if(!postArticleResult){
-                    resolve({
-                        code: statusCode.NOT_FOUND,
-                        json: authUtil.successFalse(
-                            responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )});
-                }else{
-                    resolve({
-                        code: statusCode.OK,
-                        json: authUtil.successTrue(
-                            responseMessage.X_CREATE_SUCCESS(THIS_LOG)
-                    )});
-                }
             }
+            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)';
+            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx]);
+            if(!postArticleResult){
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_CREATE_FAIL(THIS_LOG)
+                )});
+            }
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_CREATE_SUCCESS(THIS_LOG)
+            )});
         });
     },
     read: (blogIdx, articleIdx) => {
         return new Promise(async (resolve,reject) => {
             const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
             const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, articleIdx]);
-
             if(getArticleResult.length == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_FAIL(THIS_LOG)
                 )});
-            } else{
-                let article = articleData(getArticleResult[0]);
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.X_READ_SUCCESS(THIS_LOG),
-                        article
-                )});
-            }
+            } 
+            const article = articleData(getArticleResult[0]);
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_READ_SUCCESS(THIS_LOG),
+                    article
+            )});
         });
     },
     readAll: (blogIdx) => {
         return new Promise(async (resolve,reject) => {
             const getAllArticleQuery = 'SELECT * FROM article WHERE blogIdx = ?';
             const getAllArticleResult = await db.queryParam_Parse(getAllArticleQuery,[blogIdx]);
-
             if (!getAllArticleResult) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_ALL_FAIL(THIS_LOG)
                 )});
-            } else {
-                let articleArr = [];
-                getAllArticleResult.forEach((rawArticle, index, result) => {
-                    articleArr.push(articleData(rawArticle));
-                });
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
-                        articleArr
-                )});
             }
+            const articleArr = [];
+            getAllArticleResult.forEach((rawArticle, index, result) => {
+                articleArr.push(articleData(rawArticle));
+            });
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                    articleArr
+            )});
         });
     },
-    update: (body, blogIdx) => {
+    update: ({
+        articleIdx,
+        title,
+        content,
+        writer
+    }, blogIdx) => {
         return new Promise(async(resolve,reject) => {
-            const {
-                articleIdx,
-                title,
-                content,
-                writer
-            } = body;
-
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -105,45 +95,10 @@ const article = {
                         responseMessage.NULL_VALUE
                     )
                 });
-            } else{
-                const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
-                const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, body.articleIdx]);
-                console.log(getArticleResult);
-                if (getArticleResult.length == 0) {
-                    resolve({
-                        code: statusCode.NOT_FOUND,
-                        json: authUtil.successFalse(
-                            responseMessage.NULL_VALUE
-                        )
-                    });
-                }else{
-                    const putArticleQuery = 'UPDATE article SET title = ?, content = ?, writer = ? WHERE blogIdx = ? AND articleIdx = ?';
-                    const putArticleResult = await db.queryParam_Parse(putArticleQuery,[title, content, writer, blogIdx, articleIdx])
-                    console.log(putArticleResult);
-
-                    if(!putArticleResult){
-                        resolve({
-                            code: statusCode.NOT_FOUND,
-                            json: authUtil.successFalse(
-                                responseMessage.X_UPDATE_FAIL(THIS_LOG)
-                            )
-                        });
-                    }else{
-                        resolve({
-                            code: statusCode.OK,
-                            json: authUtil.successTrue(
-                                responseMessage.X_UPDATE_SUCCESS(THIS_LOG)
-                        )});
-                    }
-                }
-            }
-        });
-    },
-    remove: (body, blogIdx) => {
-        return new Promise(async(resolve,reject) => {
+            } 
             const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
-            const getArticleResult = await db.queryParam_Parse(getArticleQuery, [blogIdx, body.articleIdx] );
-
+            const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, body.articleIdx]);
+            console.log(getArticleResult);
             if (getArticleResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -151,27 +106,54 @@ const article = {
                         responseMessage.NULL_VALUE
                     )
                 });
-            } else {
-                const deleteArticleQuery = 'DELETE FROM article WHERE blogIdx = ? AND articleIdx = ?';
-                const deleteArticleResult = await db.queryParam_Parse(deleteArticleQuery,[blogIdx, body.articleIdx]);
-                console.log(deleteArticleResult);
-
-                if (!deleteArticleResult) {
-                    resolve({
-                        code: statusCode.NOT_FOUND,
-                        json: authUtil.successFalse(
-                            responseMessage.X_DELETE_FAIL(THIS_LOG)
-                        )
-                    });
-                } else { 
-                    resolve({
-                        code: statusCode.OK,
-                        json: authUtil.successTrue(
-                            responseMessage.X_DELETE_SUCCESS(THIS_LOG)
-                        )
-                    });
-                }
             }
+            const putArticleQuery = 'UPDATE article SET title = ?, content = ?, writer = ? WHERE blogIdx = ? AND articleIdx = ?';
+            const putArticleResult = await db.queryParam_Parse(putArticleQuery,[title, content, writer, blogIdx, articleIdx])
+            console.log(putArticleResult);
+            if(!putArticleResult){
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_UPDATE_FAIL(THIS_LOG)
+                    )
+                });
+            }
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_UPDATE_SUCCESS(THIS_LOG)
+            )});
+        });
+    },
+    remove: (body, blogIdx) => {
+        return new Promise(async(resolve,reject) => {
+            const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
+            const getArticleResult = await db.queryParam_Parse(getArticleQuery, [blogIdx, body.articleIdx] );
+            if (getArticleResult.length == 0) {
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.NULL_VALUE
+                    )
+                });
+            }
+            const deleteArticleQuery = 'DELETE FROM article WHERE blogIdx = ? AND articleIdx = ?';
+            const deleteArticleResult = await db.queryParam_Parse(deleteArticleQuery,[blogIdx, body.articleIdx]);
+            console.log(deleteArticleResult);
+            if (!deleteArticleResult) {
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_DELETE_FAIL(THIS_LOG)
+                    )
+                });
+            }
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_DELETE_SUCCESS(THIS_LOG)
+                )
+            });
         });
     }
 }

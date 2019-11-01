@@ -20,7 +20,7 @@ router.get('/',(req,res) => {
 });
 
 router.get('/:commentIdx', (req, res) => {
-    Comment.read(req.params.blogIdx,req.params.articleIdx,req.params.commentIdx).then(({
+    Comment.read(req.params.articleIdx,req.params.commentIdx).then(({
         code,
         json
     }) => {
