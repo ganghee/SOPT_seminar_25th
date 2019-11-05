@@ -1,4 +1,4 @@
-const poolPromise = require('../../config/dbConfig')
+const poolPromise = require('../config/dbconfig')
 
 module.exports = {
     queryParam_None: async (...args) => {
