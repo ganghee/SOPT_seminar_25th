@@ -81,6 +81,29 @@ const article = {
             )});
         });
     },
+    readAllArticle: () => {
+        return new Promise(async (resolve,reject) => {
+            const getArticleQuery = 'SELECT * FROM article';
+            const getArticlesResult = await db.queryParam_None(getArticleQuery);
+            if(getArticlesResult.length == 0){
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_READ_FAIL(THIS_LOG)
+                )});
+            } 
+            const articleArr = [];
+            getArticlesResult.forEach((rawArticle, index, result) => {
+                articleArr.push(articleData(rawArticle));
+            });
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_READ_SUCCESS(THIS_LOG),
+                    articleArr
+            )});
+        });
+    },
     update: ({
         articleIdx,
         title,

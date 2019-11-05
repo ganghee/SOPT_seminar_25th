@@ -81,6 +81,29 @@ const comment = {
             )});
         });
     },
+    readAllComment: () => {
+        return new Promise(async (resolve,reject) => {
+            const getAllCommentQuery = 'SELECT * FROM comment';
+            const getCommentsResult = await db.queryParam_Parse(getAllCommentQuery);
+            if (!getCommentsResult) {
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_READ_ALL_FAIL(THIS_LOG)
+                )});
+            } 
+            const commentArr = [];
+            getCommentsResult.forEach((rawComment) => {
+                commentArr.push(commentData(rawComment));
+            });
+            resolve({
+                code: statusCode.OK,
+                json: authUtil.successTrue(
+                    responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                    commentArr
+            )});
+        });
+    },
     update: ({
         commentIdx,
         title,
