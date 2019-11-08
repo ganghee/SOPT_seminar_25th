@@ -42,9 +42,10 @@ router.post('/refresh', (req, res) => {
     res.status(statusCode.OK).send(util.successTrue(resMessage.REFRESH_TOKEN, newAccessToken)); 
 });
 
-router.use('/middleware',LoggedIn)
 router.post('/middleware', (req, res) => { 
     res.json(req.decoded);
 });
+
+router.use('/middleware',LoggedIn);
 
 module.exports = router;

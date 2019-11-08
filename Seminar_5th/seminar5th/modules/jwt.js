@@ -6,7 +6,7 @@ const options = {
 };
 
 module.exports = { 
-    sign: (user) => {
+    sign: (user) => {~
         const payload = {
             idx: user.idx, grade: user.grade, name: user.name
         };
@@ -41,6 +41,5 @@ module.exports = {
             name: user.name
         };
         return jwt.sign(payload, secretOrPrivateKey,options);
-
     } 
 };
