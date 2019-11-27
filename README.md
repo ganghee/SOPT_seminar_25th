@@ -171,7 +171,7 @@
 
    - **5.2 query string**
 
-        ![image](https://user-images.githubusercontent.com/35513039/66933697-68678c80-f074-11e9-9b00-a60188add641.png)
+        <img src="https://user-images.githubusercontent.com/35513039/66933697-68678c80-f074-11e9-9b00-a60188add641.png" width="50%"/>
 
         ```
         var qStr = 'where=nexearch&query=querystring&sm=top_hty&fbm=1&ie=utf8';
@@ -236,7 +236,8 @@
 **1.1 정의**
 
 Node.js는 확장성 있는 네트워크 애플리케이션 개발에 사용되는 소프트웨어 플랫폼이다. 
-![image](https://user-images.githubusercontent.com/35513039/66976620-874e3900-f0dd-11e9-858a-ed2224423dad.png)
+
+<img src="https://user-images.githubusercontent.com/35513039/66976620-874e3900-f0dd-11e9-858a-ed2224423dad.png" width="50%"/>
 
 **1.2 런타임**
 
@@ -253,14 +254,19 @@ JavaScript라면 Web Browser에서 작동하는 JavaScript 측면이 있고 Node
     - 동기(Blocking, Sync) : 요청을 하고 완료를 할 때까지 기다리는 방식
     - 비동기(Non-Blocking, Async) : 방식은 요청을 하고 바로 제어권을 돌려 받는 방식 즉 요청을 하고 다시 프로그램을 처리하다가 완료 이벤트가 발생하면 미리 지정한 처리를 진행한다.
 
-    ![image](https://user-images.githubusercontent.com/35513039/66980936-44945d00-f0ed-11e9-8c93-fa61d2fa0754.png)
+        \
+        <img src="https://user-images.githubusercontent.com/35513039/66980936-44945d00-f0ed-11e9-8c93-fa61d2fa0754.png" width="50%"/>
 
     
 - **Single Thread**
 
-    하나의 쓰레드로만 동작한다.
-    ![image](https://user-images.githubusercontent.com/35513039/66981423-a3a6a180-f0ee-11e9-96ef-083d717cc0f5.png)
+    하나의 쓰레드로만 동작한다. 
+    
+    \
+    <img src="https://user-images.githubusercontent.com/35513039/66981423-a3a6a180-f0ee-11e9-96ef-083d717cc0f5.png" width="50%"/>
 
+    \
+    []()
 - **이벤트 기반**
 
     이벤트가 발생 할 때 미리 지정해 놓은 작업을 수행하는 방식 \
@@ -271,7 +277,6 @@ JavaScript라면 Web Browser에서 작동하는 JavaScript 측면이 있고 Node
     병렬성은 실제 흐름을 실행시키는 것이 복수 개인 것을 의미한다. \
     Node.js는 기본적으로 Single Thread이기 때문에 동시성을 가지고 있으며 Node.js Core API에 패키지 된 cluster 또는 child_process 모듈을 통해 “병렬 처리”를 지원한다. \
     즉 동시성과 병렬성 모두 가지고 있다.
-
 
 **1.4 구조**
 
@@ -360,9 +365,10 @@ task3 : 동기
 
     가장 많이 사용되는 key derivation function
     해시 함수의 컨테이너인 PBKDF2는 솔트를 적용한 후 해시 함수의 반복 횟수를 임의로 선택한다. \
-    PBKDF2는 아주 가볍고 구현하기 쉬우며, SHA와 같이 검증된 해시 함수만을 사용한다
+    PBKDF2는 아주 가볍고 구현하기 쉬우며, SHA와 같이 검증된 해시 함수만을 사용한다 
 
-    ![image](https://user-images.githubusercontent.com/35513039/66986310-a0fd7980-f0f9-11e9-8078-cd53a38d900d.png)
+    \
+    <img src="https://user-images.githubusercontent.com/35513039/66986310-a0fd7980-f0f9-11e9-8078-cd53a38d900d.png" width="50%"/>
 
     - **Hash** \
     해시 알고리즘은 문자열을 특정 규칙을 이용해 다른 문자열로 치환하는 방식 해시 알고리즘으로는 sha256, sha512 등
@@ -495,7 +501,9 @@ __3. Handle every single error__ \
 
 - **3.3 Promise의 흐름** \
 resolve 함수를 호출하면 fulfilled 상태가 되며 reject 함수를 호출하면 rejected 상태가 됩니다. fulfilled 상태는 then을 통해서 전달되며 rejected는 catch를 통해서 전달됩니다.
-    ![image](https://user-images.githubusercontent.com/35513039/66990901-07869580-f102-11e9-8e9a-43a9aa183c05.png)
+    
+    \
+    <img src="https://user-images.githubusercontent.com/35513039/66990901-07869580-f102-11e9-8e9a-43a9aa183c05.png" width="50%"/>
 
 - **3.4 Promise 실습**  \
 Promise 객체를 이용하여 랜덤 점수를 배열로 받는다. 그 배열 원소들의 합을 구한다. 그리고 그 합의 등급을 매겨보자
