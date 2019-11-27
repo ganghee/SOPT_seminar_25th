@@ -3,8 +3,16 @@
 - [2차 세미나](#-2차-세미나) - Node.js, 동기 비동기, Promise, async/await
 - [3차 세미나](#-3차-세미나) - AWS, RDS, CRUD
 - [4차 세미나](#-4차-세미나) - Database, EC2
+- [5차 세미나](#-5차-세미나) - Database, EC2
 ------------
+
+\
+\
+\
+[]()
 ## 🔥 1차 세미나
+\
+[]()
 ### 🍀1. HTTP 모듈을 이용한 Server 구현
    ```
    const http = require('http');
@@ -17,6 +25,9 @@
    }).listen(3000);
    ```
 
+\
+\
+[]()
 ### 🍀2. Express를 이용한 Server 구현
 
   - **Express** : 웹 및 모바일 애플리케이션을 위한 일련의 강력한 기능을 제공하는 간결하고 유연한 Node.js 웹 애플리케이션 프레임워크입니다.
@@ -32,7 +43,9 @@
   `cd [projectName]` \
   `npm install`\
   `npm start`
-
+\
+\
+[]()
 ### 🍀3. javascript 기초
 
 + **3.1 기본자료형** : Boolean, Number, String, Null, Undefined, Symbol 
@@ -104,7 +117,9 @@
     |:-:|:-:|:-:|
     |재 선언 가능|재 선언 불가능|재 선언 불가능|
     |재 할당 가능|재 할당 가능|재 할당 불가능|
-
+\
+\
+[]()
 ### 🍀4. 라우팅
    
    라우팅은 URI(또는 경로) 및 특정한 HTTP 요청 메소드(GET, POST 등)인 특정 엔드포인트에 대한 클라이언트 요청에 애플리 케이션이 응답하는 방법을 결정하는 것을 말합니다.
@@ -131,7 +146,9 @@
         현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다. \
         ※ method에는 get, post, put, delete등이 있습니다
       
-
+\
+\
+[]()
 ### 🍀5. 내장 모듈 소개
 
    - **5.1 url**
@@ -207,8 +224,13 @@
         fs.writeFileSync('text2.txt', data, 'utf8');
         console.log('동기적 파일 쓰기 완료');
         ```
-
+\
+\
+\
+[]()
 ## 🔥 2차 세미나
+\
+[]()
 ### 🍀 1. node.js
 
 **1.1 정의**
@@ -263,7 +285,9 @@ C언어로 만들어져서 낮은 수준의 기능들을 javascript에 매핑하
 
 - **Core Javascript** \
 Node.js API을 구현
-
+\
+\
+[]()
 ### 🍀 2. 동기/비동기
 ```
 function task1(){ 
@@ -375,9 +399,13 @@ task3 : 동기
     > 이처럼 여러 콜백함수가 중첩되어 코드를 읽기 어려워지는 것을 콜백헬 이라고 한다.
     > 비동기 처리에는 다양한 장점이 있지만 이 Callback hell이 발생하는 문제점이 있다.
 
-    ## **Callback Hell을 최소화 하는 3가지 방법**
+\
+\
+[]()
 
-    __1. Keep your code shallow__ \
+## **Callback Hell을 최소화 하는 3가지 방법**
+
+__1. Keep your code shallow__ \
     콜백함수를 명시적으로 정의하여서 연결해주면 Callback hell을 최소화 할 수 있습니다.
         
         const crypto = require('crypto');
@@ -399,7 +427,7 @@ task3 : 동기
             console.log('complete write password');
         }
         
-    __2. Modularize__ \
+__2. Modularize__ \
     작은 모듈을 만들고 이를 조립하여 큰 모듈을 만들어서 콜백 헬을 감소시키는 방법
     
     Practice-module-pbkdf-fix2.js
@@ -436,14 +464,16 @@ task3 : 동기
         module.exports = encryptPBKDF2;
         
 
-    __3. Handle every single error__ \
+__3. Handle every single error__ \
     콜백 함수의 첫 번째 인자를 error 관련 값으로 지정
         
         run(function(err){
             if(err) throw err
             window.alert('done')
         })
-        
+\
+\
+[]()
 
 ### 🍀 **3. Promise**
 
@@ -594,7 +624,9 @@ csvtojson 모듈은 csv포맷에서 JSON으로 가져오는 모듈입니다.
     { id: 'heesung', pw: '1q2w3e4r!', name: '윤희성' },
     { id: 'starbucks', pw: 'JamongBlackHoneyTea', name: '스타벅스' } ]
     ```
-
+\
+\
+[]()
 ### 🍀 **4. Async/Await**
 
 ES6 이후에 나온 자바스크립트 비동기 패턴.
@@ -637,8 +669,13 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
         console.log(resiltItems); //[1,2,3]
     }
     ```
-
+\
+\
+\
+[]()
 ## 🔥 3차 세미나
+\
+[]()
 ### 🍀 1. AWS
 
 - **1.1 서버의 정의**
@@ -673,7 +710,9 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.7 S3 (Simple Storage Service)**
 
     인터넷용 스토리지 서비스. 개발자가 더 쉽게 웹 규모의 컴퓨팅 작업을 수행할 수 있게 설계
-
+\
+\
+[]()
 ### 🍀 2. CRUD 실습
 - **2.1 프로젝트 구조**
 
@@ -798,8 +837,13 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
         });
         
         ```
-
+\
+\
+\
+[]()
 ## 🔥 4차 세미나
+\
+[]()
 ### 🍀 1. Database
 
 - **1.1 정의** \
@@ -819,7 +863,17 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.4 Transaction**
 
     여러 SQL문을 하나로 묶어서 하나라도 모든 쿼리가 성공한 경우에만 작업이 진행되도록 하는 것
-
+\
+\
+[]()
 ### 🍀 2. EC2
 
 안전한 크기 조정이 가능한 컴퓨팅 파워를 클라우드에서 제공하는 웹 서비스. 사용자가 정의한 조건에 따라 자동으로 Amazon EC2 용량을 급격하게 확장 또는 축소 기능.
+\
+\
+\
+[]()
+## 🔥 5차 세미나
+\
+[]()
+### 🍀 1. Database
