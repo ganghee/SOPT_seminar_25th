@@ -3,7 +3,7 @@
 - [2차 세미나](#-2차-세미나) - Node.js, 동기 비동기, Promise, async/await
 - [3차 세미나](#-3차-세미나) - AWS, RDS, CRUD
 - [4차 세미나](#-4차-세미나) - Database, EC2
-- [5차 세미나](#-5차-세미나) - Database, EC2
+- [5차 세미나](#-5차-세미나) - Multer, S3, JWT
 ------------
 
 \
@@ -86,7 +86,7 @@
           return x + y;
       }
       ```
-      - 호이스팅에 영향을 받지 않는 함수 선언식
+    - 호이스팅에 영향을 받지 않는 함수 선언식
       ```
       var add = function(x, y) { 
           return x + y;
@@ -122,7 +122,7 @@
 []()
 ### 🍀4. 라우팅
    
-   라우팅은 URI(또는 경로) 및 특정한 HTTP 요청 메소드(GET, POST 등)인 특정 엔드포인트에 대한 클라이언트 요청에 애플리 케이션이 응답하는 방법을 결정하는 것을 말합니다.
+   라우팅은 URI(또는 경로) 및 특정한 HTTP 요청 메소드(GET, POST 등)인 특정 엔드포인트에 대한 클라이언트 요청에 애플리케이션이 응답하는 방법을 결정하는 것을 말합니다.
 
    - **4.1 라우팅 따라가기**
 
@@ -143,7 +143,7 @@
       - **Index.js, Users.js** \
         request를 받아서 response를 처리하는 로직이 들어간다. \
         router.{METHOD}():
-        현재 path에 특정 METHOD로 요청이 오면 이를 인 식하고 처리합니다. \
+        현재 path에 특정 METHOD로 요청이 오면 이를 인식하고 처리합니다. \
         ※ method에는 get, post, put, delete등이 있습니다
       
 \
@@ -241,7 +241,7 @@ Node.js는 확장성 있는 네트워크 애플리케이션 개발에 사용되�
 
 **1.2 런타임**
 
-프로그램이 실향되고 있을 때 존재하는 곳 \
+프로그램이 실행되고 있을 때 존재하는 곳 \
 즉 컴퓨터 내에서 프로그램이 실행되면 그것이 바로 프로그램의 런타임이다. \
 좀 더 구체적으로 말하면 프로그래밍 언어가 구동되는 환경이라고 말하면 된다. \
 JavaScript라면 Web Browser에서 작동하는 JavaScript 측면이 있고 Node.js 환경에서 작동하는 측면이 있다.
@@ -260,7 +260,7 @@ JavaScript라면 Web Browser에서 작동하는 JavaScript 측면이 있고 Node
     
 - **Single Thread**
 
-    하나의 쓰레드로만 동작한다. 
+    하나의 쓰레드로만 동작한다.
     
     \
     <img src="https://user-images.githubusercontent.com/35513039/66981423-a3a6a180-f0ee-11e9-96ef-083d717cc0f5.png" width="50%"/>
@@ -598,9 +598,8 @@ json2csv 모듈은 JSON 형태의 Javascript 객체를 CSV형태의 String으로
 
     출력값
     ```
-    [ { id: 'admin', pw: 'admin', name: '관리자' },
-    { id: 'heesung', pw: '1q2w3e4r!', name: '윤희성' },
-    { id: 'starbucks', pw: 'JamongBlackHoneyTea', name: '스타벅스' } ]
+    "id","pw","name"
+    "admin","admin","관리자" "heesung","1q2w3e4r!","윤희성" "starbucks","JamongBlackHoneyTea","스타벅스"
     ```
 
 - **3.6 csvtojson 모듈**\
@@ -688,7 +687,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
 - **1.1 서버의 정의**
 
-    서버는 클라이언트에게 네트워크를 통해 정보나 서비스를 제공하는 켐퓨터 시스템으로 컴퓨터 프로그램 또는 장치를 의미한다. 특히, 서버에서 동작하는 소프트웨어를 서버 소프트웨어라 한다. 주로 리눅스 등의 운영체제를 설치한 대형컴퓨터를 쓰지만, 그렇지 않은 경우도 있다.
+    서버는 클라이언트에게 네트워크를 통해 정보나 서비스를 제공하는 컴퓨터 시스템으로 컴퓨터 프로그램 또는 장치를 의미한다. 특히, 서버에서 동작하는 소프트웨어를 서버 소프트웨어라 한다. 주로 리눅스 등의 운영체제를 설치한 대형컴퓨터를 쓰지만, 그렇지 않은 경우도 있다.
 
 - **1.2 서버의 조건**
     - 컴퓨터의 전원이 계속 ON되어 있어야 한다.
@@ -884,4 +883,6 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 ## 🔥 5차 세미나
 \
 []()
-### 🍀 1. Database
+### 🍀 1. Multer
+
+- 
