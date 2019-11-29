@@ -1,9 +1,9 @@
-const statusCode = require('../module/utils/statusCode');
-const responseMessage = require('../module/utils/responseMessage');
-const authUtil = require('../module/utils/authUtil');
+const statusCode = require('../modules/utils/statusCode');
+const responseMessage = require('../modules/utils/responseMessage');
+const authUtil = require('../modules/utils/authUtil');
 
-const db = require('../module/db/pool');
-const commentData = require('../module/data/commentData');
+const db = require('../modules/db/pool');
+const commentData = require('../modules/data/commentData');
 
 const THIS_LOG = '댓글';
 

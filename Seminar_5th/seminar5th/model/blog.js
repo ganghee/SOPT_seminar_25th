@@ -1,9 +1,9 @@
-const statusCode = require('../module/utils/statusCode');
-const responseMessage = require('../module/utils/responseMessage');
-const authUtil = require('../module/utils/authUtil');
+const statusCode = require('../modules/utils/statusCode');
+const responseMessage = require('../modules/utils/responseMessage');
+const authUtil = require('../modules/utils/authUtil');
 
-const db = require('../module/db/pool')
-const blogData = require('../module/data/blogData')
+const db = require('../modules/db/pool')
+const blogData = require('../modules/data/blogData')
 
 const THIS_LOG = '카테고리';
 

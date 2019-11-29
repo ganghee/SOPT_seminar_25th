@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
 
-const statusCode = require('../../module/utils/statusCode');
-const responseMessage = require('../../module/utils/responseMessage');
-const authUtil = require('../../module/utils/authUtil');
+const statusCode = require('../../modules/utils/statusCode');
+const responseMessage = require('../../modules/utils/responseMessage');
+const authUtil = require('../../modules/utils/authUtil');
 
 const Blog = require('../../model/blog');
 router.use('/:blogIdx/articles', require('./articles'));

@@ -8,6 +8,6 @@ module.exports =
             "writer": rawArticleData.writer,
             "blogIdx": rawArticleData.blogIdx
         }
-        return articleData;
+        return articleData
+
     }
-    
