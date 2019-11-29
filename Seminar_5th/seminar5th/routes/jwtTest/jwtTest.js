@@ -1,6 +1,6 @@
 const express = require('express'); 
 const router = express.Router({mergeParams: true});
-const jwt = require('../../Module/jwt');
+const jwt = require('../../module/jwt');
 const util = require('../../module/utils/utils');
 const resMessage = require('../../module/utils/responseMessage');
 const statusCode = require('../../module/utils/statusCode');

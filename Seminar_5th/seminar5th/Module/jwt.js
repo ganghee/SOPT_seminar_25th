@@ -26,10 +26,10 @@ module.exports = {
                 return -1;
             } else if (err.message === 'igit stvalid token') {
                 console.log('invalid token');
-                return -2; 
+                return -2;
             } else {
                 console.log("invalid token");
-                return -2; 
+                return -2;
         }
         }
         return decoded;
