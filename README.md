@@ -3,7 +3,7 @@
 - [2차 세미나](#-2차-세미나) - Node.js, 동기 비동기, Promise, async/await
 - [3차 세미나](#-3차-세미나) - AWS, RDS, CRUD
 - [4차 세미나](#-4차-세미나) - Database, EC2
-- [5차 세미나](#-5차-세미나) - Multer, S3, JWT
+- [5차 세미나](#-5차-세미나) - Multer, S3, IAM, JWT
 ------------
 
 \
@@ -885,4 +885,104 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 []()
 ### 🍀 1. Multer
 
-- 
+- **1.1 특징**
+  - Json 타입은 파일 전송 불가
+  - Multipart/form-data 방법으로 파일 전송 가능
+  - Multer 모듈은 Multipart/form-data로 전송된 파일을 처리해줌
+
+- **1.2 3가지 메소드**
+  1. single(fieldname) : Fieldname으로 받은 파일을 받아서 req.file에 저장
+   
+   ```
+    router.post('/single',upload.single('image'),(req,res) =>{
+        console.log(req.file);
+        console.log(req.body);
+        res.send({file: req.file, body: req.body});
+    })
+   ```
+  2. array(fieldname[,maxCount]) : Fieldname으로 받은 여러 개의 파일을 받아서 req.files(배열)에 저장
+   ```
+   router.post('/array',upload.array('photos',4),(req.res)=>{
+       console.log(req.files);
+       console.log(req.body);
+       res.send({file:req.files, body: req.body});
+   })
+   ```
+  3. fields(fields) : 여러 개의 키로 받은 여러 개의 파일을 req.files(객체)에 저장
+    ```
+    var cpUpload = upload.fields([{name:'thumbnail', maxCount:1},{name:'image',maxCount:8}])
+    router.post('/fields',cpUpload,(req,res)=>{
+        console.log(req.files);
+        console.log(req.body);
+        res.send({file:req.files, body:req.body});
+    })
+    ```
+
+ \
+ \
+[]()
+### 🍀 2. S3
+- **1.1 정의**
+
+    Amazon Simple Storage Service는 인터넷용 스토리지 서비스입니다. 이 서비스는 개발자가 더 쉽게 웹 규모 컴퓨팅 작업을 수행할 수 있도록 설계되었습니다.
+
+- **1.2 모듈**
+
+    - Multer-s3 모듈
+        이미지 업로드 시 로컬 서버가 아닌 S3에 업로드하도록 만들어주는 모듈
+    - AWS-SDK 모듈
+        AWS 서비스를 연결하기 위한 모듈
+
+\
+\
+[]()
+### 🍀 3. IAM
+
+- **1.1 정의**
+    AWS Identity and Access Management(IAM)는 AWS 리소스에 대한 액세스를 안전하게 제어할 수 있는 웹 서비스입니다. IAM을 사용하여 리소스를 사용하도록 인증(로그인) 및 권한 부여(권한 있음)된 대상을 제어합니다.
+
+\
+\
+[]()
+### 🍀 4. JWT
+
+- **1.1 정의** \
+    JSON Web Token의 약자로 클레임 토큰 기반의 방식. 클라이언트의 세션 상태를 저장하는 것이 아니라 필요한 정보를 토큰 body에 저장해서 클라이언트가 가지고 이를 증명서 처럼 사용
+
+- **1.2 구성** \
+    {Header}.{Payload}.{Verify Signature} \
+    3가지 정보를 '.'로 연결하여 사용한다.
+
+    **Header** : JWT 토큰의 유형이나 사용된 해시 알고리즘의 정보가 들어간다.
+
+    **Payload** : 클라이언트에 대한 정보가 담겨있다. 또한 여기에는 iss, sub, aud, exp, nbf, iat, jti 와 같은 기본 정보가 들어간다.
+
+    **Signature** : header에서 지정한 알고리즘과 secret key로 Header와 Payload를 담는다.
+
+- **1.3 특징**
+  
+    - **1.3.1 Payload는 공개 데이터**
+
+        JWT에 정보는 누구나 https://jwt.io/ 페이지에 접속해서 정보를 확인할 수 있습니다. 따라서 비밀번호와 같은 보안이 필요한 정보는 payload에 저장하면 안됩니다.
+
+    - **1.3.2 JWT의 Secret Key**
+
+        JWT에서는 정보는 공개가 되어있지만 해시 값을 통해서 정보가 유효한지 확인을 하게 됩니다. 따라서 시크릿 키가 유출이 된다면 JWT에서 보안상에 큰 위협이 됩니다.
+
+- **1.4 과정**
+
+    - **1.4.1 로그인**
+      - 1. 클라이언트가 유저에 대한 정보(ID,Password)에 대한 정보를 서버에게 보낸다.
+      - 2. 서버는 DB를 이용해서 정보의 유효성을 확인한다.
+      - 3. User 정보 중 일부를 JWT body에 넣고 토큰을 발행
+      - 4. 클라이언트에게 응답한다.
+
+    - **1.4.2 토큰 검증**
+      - 1. HTTP header에 토큰 값을 넣어서 보낸다.
+
+            <img src="https://user-images.githubusercontent.com/35513039/69848343-34ab9380-12bd-11ea-8598-e9cbc5afc727.png" width="50%"/>
+
+      - 2. 서버는 토큰값을 받아서 JWT 정보와 서버가 가지고 있는 secret key를 이용해서 서명을 만든다. 이때 JWT의 서명과 일치한다면 유효하고 일치하지 않는다면 유효하지 않는 요청으로 판단한다.
+
+            <img src="https://user-images.githubusercontent.com/35513039/69848455-7f2d1000-12bd-11ea-826b-31e2887fd829.png" width="50%"/>
+
