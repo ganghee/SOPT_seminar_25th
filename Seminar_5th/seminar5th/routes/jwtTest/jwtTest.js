@@ -1,10 +1,10 @@
 const express = require('express'); 
 const router = express.Router({mergeParams: true});
 const jwt = require('../../Module/jwt');
-const util = require('../../Module/util/utils');
-const resMessage = require('../../Module/util/responseMessage');
-const statusCode = require('../../Module/util/statusCode');
-const {LoggedIn} = require('../../Module/util/authUtil');
+const util = require('../../module/utils/utils');
+const resMessage = require('../../module/utils/responseMessage');
+const statusCode = require('../../module/utils/statusCode');
+const {LoggedIn} = require('../../module/utils/authUtil');
 
 router.post('/verify', (req, res) => { 
     const {token} = req.headers;

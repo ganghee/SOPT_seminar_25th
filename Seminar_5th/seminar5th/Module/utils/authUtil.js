@@ -6,6 +6,19 @@ const statusCode = require('./statusCode');
 const util = require('./utils');
 
 const authUtil = {
+    successTrue: (message, data) => { 
+        return {
+            success: true,
+            message: message, 
+            data: data
+        } 
+    },
+    successFalse: (message) => { 
+        return {
+            success: false,
+            message: message 
+        }
+    }, 
     LoggedIn: async(req, res, next) => {
         var token = req.headers.token;
 

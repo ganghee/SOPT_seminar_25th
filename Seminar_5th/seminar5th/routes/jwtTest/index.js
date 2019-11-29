@@ -1,6 +1,6 @@
 const express = require('express'); 
 const router = express.Router({mergeParams: true});
-const LoggedIn = require('../../Module/util/authUtil');
+const LoggedIn = require('../../module/utils/authUtil');
 
 
 router.use('/', require('./jwtTest'));
