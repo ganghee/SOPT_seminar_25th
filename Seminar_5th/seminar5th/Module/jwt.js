@@ -5,8 +5,6 @@ const options = {
     algorithm: "HS256", expiresIn: "1h", issuer: "genie"
 };
 
-
-
 module.exports = { 
     sign: (user) => {
         const payload = {
@@ -26,7 +24,7 @@ module.exports = {
             if (err.message === 'jwt expired') {
                 console.log('expired token');
                 return -1;
-            } else if (err.message === 'invalid token') {
+            } else if (err.message === 'igit stvalid token') {
                 console.log('invalid token');
                 return -2; 
             } else {
