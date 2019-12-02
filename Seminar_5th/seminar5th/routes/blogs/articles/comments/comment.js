@@ -1,69 +1,11 @@
 const express = require('express'); 
 const router = express.Router({mergeParams: true});
+const CommentsControllers = require('../../../../controllers/commentsController')
 
-const statusCode = require('../../../../modules/utils/statusCode');
-const responseMessage = require('../../../../modules/utils/responseMessage');
-const authUtil = require('../../../../modules/utils/authUtil');
+router.get('/',CommentsControllers.readAll);
+router.get('/:commentIdx',CommentsControllers.read);
+router.post('/',CommentsControllers.create);
+router.put('/',CommentsControllers.update);
+router.delete('/',CommentsControllers.update);
 
-const Comment = require('../../../../model/comment');
-
-router.get('/',(req,res) => {
-    Comment.readAll(req.params.articleIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.get('/:commentIdx', (req, res) => {
-    Comment.read(req.params.articleIdx,req.params.commentIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.post('/', (req, res) => {
-    Comment.create(req.body, req.params.articleIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.put('/', (req, res) => {
-    Comment.update(req.body, req.params.articleIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.delete('/', (req, res) => {
-    Comment.remove(req.body, req.params.articleIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
 module.exports = router;

@@ -6,7 +6,8 @@ module.exports =
             "title": rawArticleData.title,
             "content": rawArticleData.content,
             "writer": rawArticleData.writer,
-            "blogIdx": rawArticleData.blogIdx
+            "blogIdx": rawArticleData.blogIdx,
+            "imageUrl":rawArticleData.imageUrl
         }
         return articleData
 

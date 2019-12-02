@@ -21,14 +21,11 @@ const authUtil = {
     }, 
     LoggedIn: async(req, res, next) => {
         var token = req.headers.token;
-
         if(!token){
             return res.status(statusCode.BAD_REQUEST).send(util.successFalse(resMessage.NO_TOKEN))
         }
-
         const result = jwt.verify(token); 
         console.log(result);
-
         if(result == -1) {
             res.status(statusCode.UNAUTHORIZED)
             .send(util.successFalse(resMessage.EXPIRED_TOKEN)); 
@@ -38,7 +35,6 @@ const authUtil = {
             return res.status(statusCode.UNAUTHORIZED)
             .send(util.successFalse(resMessage.INVALID_TOKEN)); 
         }
-
         const userIdx = result.idx;
         req.decoded = userIdx;
         next();

@@ -1,70 +1,12 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
+const upload = require('../../../config/multer')
+const ArticlesController = require('../../../controllers/articlesControllers')
 
-const statusCode = require('../../../modules/utils/statusCode');
-const responseMessage = require('../../../modules/utils/responseMessage');
-const authUtil = require('../../../modules/utils/authUtil');
-
-const Article = require('../../../model/article');
-
-router.get('/',(req,res) => {
-    Article.readAll(req.params.blogIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.get('/:articleIdx',(req,res) => {
-    Article.read(req.params.blogIdx,req.params.articleIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.post('/',(req,res) => {
-    Article.create(req.body, req.params.blogIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.put('/',(req,res) => {
-    Article.update(req.body, req.params.blogIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
-
-router.delete('/', (req,res) => {
-    Article.remove(req.body, req.params.blogIdx).then(({
-        code,
-        json
-    }) => {
-        res.status(code).send(json);
-    }).catch(err => {
-        console.log(err);
-        res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
-    });
-});
+router.get('/',ArticlesController.readAll);
+router.get('/:articleIdx',ArticlesController.read);
+router.post('/', upload.single('image'), ArticlesController.create);
+router.put('/',ArticlesController.update);
+router.delete('/',ArticlesController.remove);
 
 module.exports = router;

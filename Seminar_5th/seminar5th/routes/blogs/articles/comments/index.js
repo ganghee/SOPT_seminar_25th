@@ -3,6 +3,6 @@ const router = express.Router({mergeParams: true});
 
 router.use('/', require('./comment'));
 
-console.log('/index/blogs/articles/comments/index.js');
+console.log('/blog/:blogIdx/articles/:articleIdx/comments');
 
 module.exports = router;

@@ -4,16 +4,18 @@ const authUtil = require('../modules/utils/authUtil');
 
 const db = require('../modules/db/pool');
 const articleData = require('../modules/data/articleData');
+const upload = require('../config/multer');
 
 const THIS_LOG = '게시글';
 
 const article = {
-    create: ({
+    create: (image,{
         title,
         content,
         writer
     },blogIdx) => {
         return new Promise(async(resolve,reject) => {
+            console.log(image);
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -22,8 +24,8 @@ const article = {
                     )
                 });
             }
-            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)';
-            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx]);
+            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx, imageUrl) VALUES (?, ?, ?, ?, ?)';
+            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx, image]);
             if(!postArticleResult){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -72,6 +74,7 @@ const article = {
             const articleArr = [];
             getAllArticleResult.forEach((rawArticle, index, result) => {
                 articleArr.push(articleData(rawArticle));
+                articleArr.imageArr.push(rawArticle)
             });
             resolve({
                 code: statusCode.OK,

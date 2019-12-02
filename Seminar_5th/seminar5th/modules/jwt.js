@@ -24,7 +24,7 @@ module.exports = {
             if (err.message === 'jwt expired') {
                 console.log('expired token');
                 return -1;
-            } else if (err.message === 'igit stvalid token') {
+            } else if (err.message === 'invalid token') {
                 console.log('invalid token');
                 return -2;
             } else {
