@@ -8,7 +8,7 @@ const {LoggedIn} = require('../../modules/utils/authUtil');
 
 router.post('/verify', (req, res) => { 
     const {token} = req.headers;
-    const result = jwt.verify(token); 
+    const result = jwt.verify(token);
     if(result == -1) {
         return res.status(statusCode.UNAUTHORIZED)
         .send(util.successFalse(resMessage.EXPIRED_TOKEN)); 
