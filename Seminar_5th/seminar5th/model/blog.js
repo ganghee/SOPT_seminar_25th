@@ -12,15 +12,15 @@ const blog = {
         title,
         content,
         writer
-    }) => {
-        return new Promise(async(resolve,reject) => {
-            if(!title || !content || !writer){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
+        }) => {
+            return new Promise(async(resolve,reject) => {
+                if(!title || !content || !writer){
+                    resolve({
+                        code: statusCode.NOT_FOUND,
+                        json: authUtil.successFalse(
+                            responseMessage.NULL_VALUE
+                        )
+                    });
             } 
             const postBlogQuery = 'INSERT INTO blog(title, content, writer) VALUES (?, ?, ?)';
             const postBlogResult = await db.queryParam_Parse(postBlogQuery,[title, content, writer]);
