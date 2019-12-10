@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const {
     secretOrPrivateKey
-} = require('../config/secretKey');
+} = require('../../config/secretKey');
 const resMessage = require('./util/responseMessage');
 const statusCode = require('./util/statusCode');
 

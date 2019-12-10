@@ -5,7 +5,8 @@ module.exports =
         "userId": rawUserData.userId,
         "userPw": rawUserData.userPw,
         "token": rawUserData.token,
-        "signupDate":rawUserData.signupDate
+        "signupDate":rawUserData.signupDate,
+        "salt":rawUserData.salt
     }
     return userData;
 }

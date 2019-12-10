@@ -1,6 +1,6 @@
 const randToken = require('rand-token');
 const jwt = require('jsonwebtoken');
-const {secretOrPrivateKey} = require('../config/secretKey'); 
+const {secretOrPrivateKey} = require('../../config/secretKey'); 
 const options = {
     algorithm: "HS256", expiresIn: "1h", issuer: "ganghee"
 };

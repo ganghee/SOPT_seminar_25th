@@ -19,6 +19,7 @@ module.exports = {
     EXPIRED_TOKEN:"토큰이 만료되었습니다",
     MISS_MATCH_PW: "비밀번호가 일치하지 않습니다",
     INVALID_TOKEN:"토큰을 사용할 수 없습니다.",
+    LOGIN_SUCCESS:"로그인이 성공하였습니다.",
 
     INTERNAL_SERVER_ERROR: "서버 내부 오류"
 }
