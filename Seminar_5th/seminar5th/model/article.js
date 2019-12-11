@@ -74,7 +74,7 @@ const article = {
             const articleArr = [];
             getAllArticleResult.forEach((rawArticle, index, result) => {
                 articleArr.push(articleData(rawArticle));
-                articleArr.imageArr.push(rawArticle)
+                //articleArr.imageArr.push(rawArticle)
             });
             resolve({
                 code: statusCode.OK,
