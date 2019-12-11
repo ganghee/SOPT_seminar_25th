@@ -21,31 +21,30 @@ router.post('/verify', (req, res) => {
 });
 
 router.post('/publish', (req, res) => { 
-    const {idx, grade, name} = req.body; 
-    if(!idx || !grade || !name){
+    const {id, date} = req.body; 
+    if(!id || !date){
         res.send("wrong parameter");
         return;
     }
-    const result = jwt.sign({idx, grade, name});
+    const result = jwt.sign({id, date});
     res.json(result); 
 });
 
 router.post('/refresh', (req, res) => {
-    const refreshToken = req.headers.refreshtoken; 
+    const refreshToken = req.headers.refreshToken; 
     const selectUser = {
-        idx: 1,
-        grade: 1,
-        id: 'genie', 
-        name: 'genie'
+        id: 1,
+        date: "2019-12-11 05:50:41"
     };
     const newAccessToken = jwt.refresh(selectUser);
     res.status(statusCode.OK).send(util.successTrue(resMessage.REFRESH_TOKEN, newAccessToken)); 
 });
 
-router.post('/middleware', (req, res) => { 
+router.use('/middleware',LoggedIn);
+router.get('/middleware', (req, res) => {
+    console.log(`req.decoded => ${req.decoded}`);
     res.json(req.decoded);
 });
 
-router.use('/middleware',LoggedIn);
 
 module.exports = router;

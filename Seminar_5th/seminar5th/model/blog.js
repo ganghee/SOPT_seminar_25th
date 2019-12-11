@@ -21,7 +21,7 @@ const blog = {
                             responseMessage.NULL_VALUE
                         )
                     });
-            } 
+            }
             const postBlogQuery = 'INSERT INTO blog(title, content, writer) VALUES (?, ?, ?)';
             const postBlogResult = await db.queryParam_Parse(postBlogQuery,[title, content, writer]);
             if(!postBlogResult){
