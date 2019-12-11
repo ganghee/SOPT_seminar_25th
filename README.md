@@ -892,7 +892,8 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
   - Json 타입은 파일 전송 불가
   - Multipart/form-data 방법으로 파일 전송 가능
   - Multer 모듈은 Multipart/form-data로 전송된 파일을 처리해줌
-
+\
+[]()
 - **1.2 3가지 메소드**
   1. single(fieldname) : Fieldname으로 받은 파일을 받아서 req.file에 저장
    
@@ -1004,23 +1005,27 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     - 예시 
       - http://test.com/company/location
       - http://service.com/tv/turn/on
-
+\
+[]()
 - **1.2 URL** 
     - 유일 자원 지시기 Uniform Resource Locator
     - 네트워크 상에서 자원이 어디있는지를 알려주기 위한 규약
     - 예시
       - http://test.com/work/sample.pdf
-
+\
+[]()
 - **1.3 정의** 
     - Representational State Transfer API
     - 2000년도에 로이 필딩 (Roy Fielding)의 박사학위 논문에서 최초로 소개되었습니다. 로이 필딩은 HTTP의 주요 저자 중 한 사람으로 그 당시 웹(HTTP) 설계의 우수성에 비해 제대로 사용되어지지 못하는 모습에 안타까워하며 웹의 장점을 최대한 활용할 수 있는 아키텍쳐로써 REST를 발표
-
-- 1.4 구성
+\
+[]()
+- **1.4 구성**
   1. 자원(resource)- URI
   2. 행위(Verb) - HTTP METHOD
   3. 표현(Representations)
-
-- 1.5 REST 제약 조건
+\
+[]()
+- **1.5 REST 제약 조건**
   1. **Uniform (유니폼 인터페이스)**
         
         Uniform Interface URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍쳐 스타일
@@ -1044,8 +1049,9 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
         REST 서버는 다중 계층으로 구성될 수 있으며 보안, 로드 밸런싱, 암호화 계층을 추가해 구조상의 유연성을 둘 수 있고 PROXY, 게이트웨이 같은 네트워크 기반의 중간 매체를 사용할 수 있게 합니다.
 
-
-- 1.6 디자인 가이드
+\
+[]()
+- **1.6 디자인 가이드**
 
   1. URI는 정보의 자원을 표현해야 한다. (동사보다는 명사를 사용)
   2. HTTP METHOD
@@ -1098,7 +1104,8 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.1 정의**
 
     날짜/시간을 다루기 위한 다양한 기능 제공
-
+\
+[]()
 - **1.2 구현**
     ```javascript
     let moment = require('moment');
@@ -1114,7 +1121,8 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     require('moment-timezone');
     moment.tz.setDefault("Asia/Seoul");
     ```
-
+\
+[]()
 - **1.3 Moment module**
 
     Query
@@ -1156,12 +1164,14 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.1 정의**
 
     유닉스 계열 컴퓨터 운영 체제의 시간 기바 job 스케줄러 고정된 시간, 날짜, 간격에 주기적으로 실행할 수 있도록 스케줄링하기 위해 사용
-
+\
+[]()
 - **1.2 node-cron 모듈**
 
     GNU crontab을 기반으로 하는 node.js용 순수 자바 스크립트의 가벼운 작업 스케줄러
     ![image](https://user-images.githubusercontent.com/35513039/70633445-ebbbed80-1c73-11ea-837a-344869312cec.png)
-
+\
+[]()
 - **1.3 node-cron 실행 주기 예제**
 
     ```javascript
@@ -1183,7 +1193,8 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.1 정의**
 
     서버 내부에서 다른 서버로 request를 보낼 때 사용하는 모듈 다른 서버에 request를 보내 데이터를 받아 옴
-
+\
+[]()
 - **1.2 공공데이터 가져오기**
 
     ```java
@@ -1254,3 +1265,9 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     throw new DatabaseError();
     return data;
     ```
+
+
+
+## 출처 : https://github.com/WITH-SOPT-SERVER/SOPT-SERVER-SEMINAR
+
+## ❄️25기 서버파트장 윤희성에게 감사드립니다❄️
