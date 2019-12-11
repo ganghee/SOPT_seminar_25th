@@ -4,6 +4,8 @@
 - [3차 세미나](#-3차-세미나) - AWS, RDS, CRUD
 - [4차 세미나](#-4차-세미나) - Database, EC2
 - [5차 세미나](#-5차-세미나) - Multer, S3, IAM, JWT
+- [6차 세미나](#-6차-세미나) - REST API, API 문서
+- [7차 세미나](#-7차-세미나) - moment, cron, request, Error handling
 ------------
 
 \
@@ -14,7 +16,7 @@
 \
 []()
 ### 🍀1. HTTP 모듈을 이용한 Server 구현
-   ```
+   ```javascript
    const http = require('http');
 
    http.createServer((req, res)=>{
@@ -58,7 +60,7 @@
     - memberName: memberValue형태
     - 모든 객체는 JSON으로 표기가 가능하다.
     - JSON 표기법으로 객체를 만들 수 있다.
-      ```
+      ```javascript
       var person = {};
       var object = { 
           name: “윤희성”, 
@@ -71,7 +73,7 @@
      - 자바스크립트에서 배열에는 어떤 값도 들어 갈 수 있다.
      - [] 키워드를 이용해서 표현
 
-       ```
+       ```javascript
         var array1 = [];
         var array2 = [1, 2, 3, 4, 5];
         var array3 = [“윤희성”, 3, 4.5, false, {name: “heesung”, part: ”server”}];
@@ -81,13 +83,13 @@
     - 자바스크립트에서 함수는 객체다
     - 함수를 생성하는 방법에는 함수 선언식과 함수 표현식이 있다.
     - 호이스팅에 영향을 받는 함수 선언식
-      ```
+      ```javascript
       function add(x, y){ 
           return x + y;
       }
       ```
     - 호이스팅에 영향을 받지 않는 함수 선언식
-      ```
+      ```javascript
       var add = function(x, y) { 
           return x + y;
       }
@@ -104,12 +106,12 @@
 
 - **3.6 var, let, const**
   - 재 선언 가능 : 같은 이름의 변수를 다시 선언할 수 있다.
-    ```
+    ```javascript
     var a = 24;
     var a = 25;
     ```
   - 재 할당 가능 : 변수가 새로운 값을 가질 수 있다. 
-    ```
+    ```javascript
     var a = 24;
     a = 25;
     ```
@@ -153,7 +155,7 @@
 
    - **5.1 url**
 
-        ```
+        ```javascript
         // include url module
         var url = require('url');
         var address = 'http://localhost:8080/index.php?type=page&action=update&id=5221';
@@ -173,7 +175,7 @@
 
         <img src="https://user-images.githubusercontent.com/35513039/66933697-68678c80-f074-11e9-9b00-a60188add641.png" width="50%"/>
 
-        ```
+        ```javascript
         var qStr = 'where=nexearch&query=querystring&sm=top_hty&fbm=1&ie=utf8';
         var qObj = querystring.parse(qStr);
         console.log(qObj);
@@ -182,13 +184,13 @@
 
    - **5.3 util**
 
-        ```
+        ```javascript
         var data = util.format('%d, %s, %j', 25, 'sopt', { name: 'heesung youn'}); console.log(data); //returns '25, sopt, {"name": "heesung youn"}'
         ```
 
    - **5.4 crypto**
 
-        ```
+        ```javascript
         var crypto = require('crypto');
 
         var algorithm = 'aes-192-cbc'
@@ -213,7 +215,7 @@
 
    - **5.5 fs**
 
-        ```
+        ```javascript
         var fs = require('fs');
         
         var text = fs.readFileSync('text.txt', 'utf8');
@@ -294,7 +296,7 @@ Node.js API을 구현
 \
 []()
 ### 🍀 2. 동기/비동기
-```
+```javascript
 function task1(){ 
 setTimeout(function(){
     console.log('task1'); 
@@ -314,7 +316,7 @@ task3 : 동기
 
 - 2.1   **fs모듈: 동기 파일 쓰기**
 
-    ```
+    ```javascript
     const fs = require('fs');
 
     const numArr = [1, 2, 3, 4, 5];
@@ -328,7 +330,7 @@ task3 : 동기
     ```
 
     결과
-    ```
+    ```javascript
     file[syncText1] write complete
     file[syncText2] write complete
     file[syncText3] write complete 
@@ -338,7 +340,7 @@ task3 : 동기
 
 - 2.2 **fs모듈: 비동기 파일 쓰기**
 
-    ```
+    ```javascript
     const fs = require('fs');
     const numArr = [1, 2, 3, 4, 5];
     const fileCommonName = 'asyncText';
@@ -386,7 +388,7 @@ task3 : 동기
     c: 원하는 iteration 반복 수 \
     DLen: 원하는 다이제스트 길이
 
-    ```
+    ```javascript
     const crypto = require('crypto’); const fs = require('fs');
     const password = 'password'; crypto.randomBytes(32, (err, salt) => {
         if(err) throw err;
@@ -413,70 +415,71 @@ task3 : 동기
 
 __1. Keep your code shallow__ \
     콜백함수를 명시적으로 정의하여서 연결해주면 Callback hell을 최소화 할 수 있습니다.
-        
-        const crypto = require('crypto');
-        const fs = require('fs');
+```javascript
+const crypto = require('crypto');
+const fs = require('fs');
 
-        const password = 'password1234';
-        crypto.randomBytes(32, madeSaltFunc);
+const password = 'password1234';
+crypto.randomBytes(32, madeSaltFunc);
 
-        function madeSaltFunc(err, salt) {
-            if(err) throw err;
-            crypto.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
-        }
-        function madeKeyFunc(err, derivedKey) {
-            if(err) throw err;
-            fs.writeFile('password.txt', derivedKey.toString('hex'), wroteFileFunc);
-        }
-        function wroteFileFunc(err) {
-            if(err) throw err;
-            console.log('complete write password');
-        }
-        
+function madeSaltFunc(err, salt) {
+    if(err) throw err;
+    crypto.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
+}
+function madeKeyFunc(err, derivedKey) {
+    if(err) throw err;
+    fs.writeFile('password.txt', derivedKey.toString('hex'), wroteFileFunc);
+}
+function wroteFileFunc(err) {
+    if(err) throw err;
+    console.log('complete write password');
+}
+```
 __2. Modularize__ \
     작은 모듈을 만들고 이를 조립하여 큰 모듈을 만들어서 콜백 헬을 감소시키는 방법
     
-    Practice-module-pbkdf-fix2.js
+Practice-module-pbkdf-fix2.js
+```javascript
+const fs = require('fs');
+const encryption = require('./encryption');
 
-        const fs = require('fs');
-        const encryption = require('./encryption');
+const password = 'password1234';
+encryption(password, (error, derivedKey) => {
+    fs.writeFile('password2.txt', derivedKey, wroteFileFunc);
+    function wroteFileFunc(err) {
+        if(err) throw err;
+        console.log('complete write password');
+    }
+})
+```
+encryption.js
+```javascript
+const crypto = require('crypto');
+const pbkdf2 = require('pbkdf2');
 
-        const password = 'password1234';
-        encryption(password, (error, derivedKey) => {
-            fs.writeFile('password2.txt', derivedKey, wroteFileFunc);
-            function wroteFileFunc(err) {
-                if(err) throw err;
-                console.log('complete write password');
-            }
-        })
-        
-    encryption.js
-        
-        const crypto = require('crypto');
-        const pbkdf2 = require('pbkdf2');
+function encryptPBKDF2(password, next){
+    crypto.randomBytes(32, madeSaltFunc);
+    function madeSaltFunc(err, salt) {
+        if(err) throw err;
+        pbkdf2.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
+    }
+    function madeKeyFunc(err, derivedKey) {
+        if(err) throw err;
+        next(err, derivedKey.toString('hex'));
+    }
+}
 
-        function encryptPBKDF2(password, next){
-            crypto.randomBytes(32, madeSaltFunc);
-            function madeSaltFunc(err, salt) {
-                if(err) throw err;
-                pbkdf2.pbkdf2(password, salt, 1, 32, 'sha512', madeKeyFunc);
-            }
-            function madeKeyFunc(err, derivedKey) {
-                if(err) throw err;
-                next(err, derivedKey.toString('hex'));
-            }
-        }
-
-        module.exports = encryptPBKDF2;
-        
+module.exports = encryptPBKDF2;
+```
 
 __3. Handle every single error__ \
     콜백 함수의 첫 번째 인자를 error 관련 값으로 지정
-        
-        run(function(err){
-            if(err) throw err
-            window.alert('done')
-        })
+```javascript
+run(function(err){
+    if(err) throw err
+    window.alert('done')
+})
+```
 \
 \
 []()
@@ -493,7 +496,7 @@ __3. Handle every single error__ \
   - rejected: 작업이 실패한 상태
 
 -  **3.2 객체 만드는 법**
-    ```
+    ```javascript
     function readFile(filename, enc){
         return new Promise(function (fulfill, reject){ ... });
     }
@@ -507,7 +510,7 @@ resolve 함수를 호출하면 fulfilled 상태가 되며 reject 함수를 호�
 
 - **3.4 Promise 실습**  \
 Promise 객체를 이용하여 랜덤 점수를 배열로 받는다. 그 배열 원소들의 합을 구한다. 그리고 그 합의 등급을 매겨보자
-    ```
+    ```javascript
     function getScoreArray(size){
         return new Promise(function(resolve, reject){
             if(size <= 0){
@@ -573,7 +576,7 @@ Promise 객체를 이용하여 랜덤 점수를 배열로 받는다. 그 배열 
 json2csv 모듈은 JSON 형태의 Javascript 객체를 CSV형태의 String으로 변환해준다.
 
     Practice-json2csv.js 
-    ```
+    ```javascript
     const json2csv = require('json2csv');
 
     const jsonArray = [{
@@ -597,7 +600,7 @@ json2csv 모듈은 JSON 형태의 Javascript 객체를 CSV형태의 String으로
     ```
 
     출력값
-    ```
+    ```javascript
     "id","pw","name"
     "admin","admin","관리자" "heesung","1q2w3e4r!","윤희성" "starbucks","JamongBlackHoneyTea","스타벅스"
     ```
@@ -606,13 +609,13 @@ json2csv 모듈은 JSON 형태의 Javascript 객체를 CSV형태의 String으로
 csvtojson 모듈은 csv포맷에서 JSON으로 가져오는 모듈입니다.
 
     csvtojson.csv 
-    ```
+    ```javascript
     "id","pw","name"
     "admin","admin","관리자" "heesung","1q2w3e4r!","윤희성" "starbucks","JamongBlackHoneyTea","스타벅스"
     ```
 
     Practice-csvtojson.js
-    ```
+    ```javascript
     const csv = require('csvtojson');
 
     csv().fromFile('./csvtojson.csv').then((jsonArr) => {
@@ -626,7 +629,7 @@ csvtojson 모듈은 csv포맷에서 JSON으로 가져오는 모듈입니다.
     })
     ```
     출력값 
-    ```
+    ```javascript
     [ { id: 'admin', pw: 'admin', name: '관리자' },
     { id: 'heesung', pw: '1q2w3e4r!', name: '윤희성' },
     { id: 'starbucks', pw: 'JamongBlackHoneyTea', name: '스타벅스' } ]
@@ -651,7 +654,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
 - **비동기 함수를 Promise버젼과 Async/Await버젼으로 살펴보기** 
 
-    ```
+    ```javascript
     function fetchItems() {
         return new Promise(function (resolve, reject) {
             var items = [1, 2, 3];
@@ -661,7 +664,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     ```
 
 - **Promise**
-    ```
+    ```javascript
     function promiseVer(){
         fetchItems().then(resultItems => {
             console.log(resultItems); //[1,2,3]
@@ -670,7 +673,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     ```
 
 - **Async/Await**
-    ```
+    ```javascript
     async function asyncVer(){
         const resultItems = await fetchItems();
         console.log(resiltItems); //[1,2,3]
@@ -731,7 +734,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **2.2 model**
     - **model/user.js**
 
-        ```
+        ```javascript
         const user = {
             signin: (id, pwd) => {
                 return new Promise((resolve, reject) => {
@@ -753,7 +756,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
     - **model/user.js**
 
-        ```
+        ```javascript
         const board = {
             create : (title, content, writer, pwd) => {
                 return new Promise((resolve, reject) => {
@@ -790,7 +793,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **2.3 routes**
     - **routes/user.js**
 
-        ```
+        ```javascript
         ...
         const User = require('../model/user');
         ...
@@ -818,7 +821,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
     - **routes/board.js**
 
-        ```
+        ```javascript
         ...
         const Board = require('../model/board');
         ...
@@ -893,7 +896,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 - **1.2 3가지 메소드**
   1. single(fieldname) : Fieldname으로 받은 파일을 받아서 req.file에 저장
    
-   ```
+   ```javascript
     router.post('/single',upload.single('image'),(req,res) =>{
         console.log(req.file);
         console.log(req.body);
@@ -901,7 +904,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     })
    ```
   2. array(fieldname[,maxCount]) : Fieldname으로 받은 여러 개의 파일을 받아서 req.files(배열)에 저장
-   ```
+   ```javascript
    router.post('/array',upload.array('photos',4),(req.res)=>{
        console.log(req.files);
        console.log(req.body);
@@ -909,7 +912,7 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
    })
    ```
   3. fields(fields) : 여러 개의 키로 받은 여러 개의 파일을 req.files(객체)에 저장
-    ```
+    ```javascript
     var cpUpload = upload.fields([{name:'thumbnail', maxCount:1},{name:'image',maxCount:8}])
     router.post('/fields',cpUpload,(req,res)=>{
         console.log(req.files);
@@ -986,3 +989,268 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
 
             <img src="https://user-images.githubusercontent.com/35513039/69848455-7f2d1000-12bd-11ea-826b-31e2887fd829.png" width="50%"/>
 
+\
+\
+\
+[]()
+## 🔥 6차 세미나
+\
+[]()
+### 🍀 1. REST API
+[]()
+- **1.1 URI** 
+    - 통합 자원 식별자 Uniform Resource Identifier
+    - 인터넷에 있는 자원을 나타내는 유일한 주소
+    - 예시 
+      - http://test.com/company/location
+      - http://service.com/tv/turn/on
+
+- **1.2 URL** 
+    - 유일 자원 지시기 Uniform Resource Locator
+    - 네트워크 상에서 자원이 어디있는지를 알려주기 위한 규약
+    - 예시
+      - http://test.com/work/sample.pdf
+
+- **1.3 정의** 
+    - Representational State Transfer API
+    - 2000년도에 로이 필딩 (Roy Fielding)의 박사학위 논문에서 최초로 소개되었습니다. 로이 필딩은 HTTP의 주요 저자 중 한 사람으로 그 당시 웹(HTTP) 설계의 우수성에 비해 제대로 사용되어지지 못하는 모습에 안타까워하며 웹의 장점을 최대한 활용할 수 있는 아키텍쳐로써 REST를 발표
+
+- 1.4 구성
+  1. 자원(resource)- URI
+  2. 행위(Verb) - HTTP METHOD
+  3. 표현(Representations)
+
+- 1.5 REST 제약 조건
+  1. **Uniform (유니폼 인터페이스)**
+        
+        Uniform Interface URI로 지정한 리소스에 대한 조작을 통일되고 한정적인 인터페이스로 수행하는 아키텍쳐 스타일
+  2. **Stateless (무상태성)**
+
+        REST는 무상태성 성격을 갖습니다. 다시 말해 작업을 위한 상태정보를 따로 저장하고 관리하지 않습니다. 세션 정보나 쿠키 정보를 별도로 저장하고 관리하지 않기 때문데 API 서버는 들어오는 요청 만을 단순히 처리하면 됩니다. 때문에 서비스의 자유도가 높아지고 서버에서 불필요한 정보를 관리하지 않음으로써 구현이 단순해 집니다.
+
+  3. **Cacheable (캐시 가능)**
+
+        REST의 가장 큰 특징 중 하나는 HTTP라는 기존 웹표준을 그대로 사용하기 때문에, 웹에서 사용하는 기존 인프라를 그대로 활용이 가능합니다. 따라서 HTTP가 가진 캐시 기능이 적용 가능합니다. HTTP 프로토콜 표준에서 사용하는 Last-Modified태그나 E-Tag를 이용하면 캐시 구현이 가능합니다.
+
+  4. **Self-descriptiveness (자체 표현 구조)**
+
+        REST의 또 다른 큰 특징 중 하나는 REST API 메시지만 보고도 이를 쉽게 이해 할 수 있는 자체 표현 구조로 되어 있다는 것입니다.
+
+  5. **Client - Server 구조**
+
+        REST 서버는 API 제공, 클라이언트는 사용자 인증이나 컨텍스트(세션, 로그인 정보)등을 직접 관리하는 구조로 각각의 역할이 확실히 구분되기 때문 에 클라이언트와 서버에서 개발해야 할 내용이 명확해지고 서로간 의존성이 줄어들게 됩니다.
+
+  6. **계층형 구조**
+
+        REST 서버는 다중 계층으로 구성될 수 있으며 보안, 로드 밸런싱, 암호화 계층을 추가해 구조상의 유연성을 둘 수 있고 PROXY, 게이트웨이 같은 네트워크 기반의 중간 매체를 사용할 수 있게 합니다.
+
+
+- 1.6 디자인 가이드
+
+  1. URI는 정보의 자원을 표현해야 한다. (동사보다는 명사를 사용)
+  2. HTTP METHOD
+        - POST: 리소스 생성
+        - GET: 리소스 조회
+        - PUT: 리소스 수정
+        - DELETE: 리소스 삭제
+  3. REST 리소스 간의 관계
+        - /리소스명/리소스ID/관계가 있는 다른 리소스명
+        - GET: /users/{userid}/devices
+        - GET: /users/{userid}/likes/devices
+
+  4. Collection과 Document
+
+        - Document는 단순히 문서 또는 한 객체 => 단수
+        - Collection은 문서들의 집합, 객체들의 집합 => 복수
+        - http://restapi.example.com/sports/soccer => sports 라는 컬렉션과 soccer라는 도큐먼트로 표현
+        - http://restapi.example.com/sports/soccer/players/14 => sports,players 컬렉션과 soccer, 13(13번인 선수)를 의미하는 도큐먼트
+
+  5. 상태코드
+        - 200: 클라이언트의 요청을 정상적으로 수행함
+        - 201: 클라이언트가 어떠한 리소스 생성을 요청, 해당 리소스가 성공적으로 생성됨(POST를 통한 리소스 생성 작업 시)
+        - 301: 클라이언트가 요청한 리소스에 대한 URI가 변경되었을 때 사용하는 응답 코드
+        - 400: 클라이언트 요청이 부적절 할 경우 사용하는 응답 코드
+        - 401: 클라이언트 인증되지 않은 상태에서 보호된 리소스를 요청했을 때 사용하는 응답 코드
+        - 402: 로그인 하지 않은 유저가 로그인 했을 때, 요청 불가능한 리소스를 요청했을 때
+        - 403: 유저 인증상태와 관계 없이 응답하고 싶지 않은 리소스를 클라이언트가 요청했을 때 사용하는 응답 코드
+        - 404: 403 보다는 400이나 404를 사용할 것을 권고. 403 자체가 리소스가 존재 한다는 뜻이기 때문
+        - 405: 클라이언트가 요청한 리소스에서는 사용 불가능한 Method를 이용했을 경우 사용하는 응답 코드
+
+\
+\
+[]()
+### 🍀 2. API 문서
+
+- 예시
+  - https://docs.google.com/spreadsheets/d/1PSdxAJ0sWwX3dOwbtrdBDNMdJU0dFRfBtNo6GWl8dk/edit#gid=0
+  - https://github.com/soptcomics/SOPT-COMICS-SERVER/wiki
+
+\
+\
+\
+[]()
+## 🔥 7차 세미나
+\
+\
+[]()
+### 🍀 1. moment
+
+- **1.1 정의**
+
+    날짜/시간을 다루기 위한 다양한 기능 제공
+
+- **1.2 구현**
+    ```javascript
+    let moment = require('moment');
+
+    console.log(`moment => ${moment()}`) //현재시간
+    console.log(`Date to moment => ${moment(new Date(2018,0,15))}`);
+    console.log(yesterday.format()); // "2015-0615T00:00:00+09:00"
+    console.log(yesterday.format('YYYY-MMDD')); // "2015-06-15"
+    ```
+
+    Timezone 설정하기
+    ```javascript
+    require('moment-timezone');
+    moment.tz.setDefault("Asia/Seoul");
+    ```
+
+- **1.3 Moment module**
+
+    Query
+    ```javascript
+    console.log(moment('2019-12-12').isSame('2020-10-21', 'year')); // false
+
+    console.log(moment('2019-12-06').isSame('2019-12-06', 'month')); // true
+
+    console.log(moment('2019-12-05').isSame('2019-10-21', 'date')); // false
+
+    console.log(moment('2019-12-05').isAfter('2019-10-21')); // true
+
+    console.log(moment('2019-12-05').isSameOrBefore('2019-10-21')); // false
+
+    console.log(moment('2019-12-05').isBetween('2019-12-22','2020-01-04')); // false
+    ```
+
+    기간
+    ```javascript
+    var t1 = new Date(2019, 12, 22);
+    var t2 = new Date(2020, 1, 4);
+    var diff2 = {
+    seconds: moment.duration(t2 - t1).asSeconds(), // 1123200
+    minutes: moment.duration(t2 - t1).asMinutes(), // 18720
+    hours: moment.duration(t2 - t1).asHours() //312
+    };
+    console.log(diff2);
+    ```
+    실행 결과
+    ```javascript
+    { seconds: 1123200, minutes: 18720, hours: 312 }
+    ```
+
+\
+\
+[]()
+### 🍀 2. cron
+
+- **1.1 정의**
+
+    유닉스 계열 컴퓨터 운영 체제의 시간 기바 job 스케줄러 고정된 시간, 날짜, 간격에 주기적으로 실행할 수 있도록 스케줄링하기 위해 사용
+
+- **1.2 node-cron 모듈**
+
+    GNU crontab을 기반으로 하는 node.js용 순수 자바 스크립트의 가벼운 작업 스케줄러
+    ![image](https://user-images.githubusercontent.com/35513039/70633445-ebbbed80-1c73-11ea-837a-344869312cec.png)
+
+- **1.3 node-cron 실행 주기 예제**
+
+    ```javascript
+    const cron = require('node-cron');
+    const moment = require('moment');
+    cron.schedule('*/10 * * * * *', () => console.log('매 10초마다 실행', moment().format()));
+    cron.schedule('0-30/7 * * * * *', () => console.log('0~30사이에 매 7초마다 실행', moment().format()));
+    cron.schedule('25 * * * * *', () => console.log('25초에 실행', moment().format()));
+    cron.schedule('26,27,28 * * * * *', () => console.log('26 또는 27 또는 28초에 실행', moment().format()));
+    cron.schedule('0 12 * * *', () => console.log('매일 12시에 실행', moment().format()));
+    cron.schedule('0 12 * * Jan', () => console.log('매주 일요일 12시에 실행', moment().format()));
+    ```
+
+\
+\
+[]()
+### 🍀 3. Request 모듈
+
+- **1.1 정의**
+
+    서버 내부에서 다른 서버로 request를 보낼 때 사용하는 모듈 다른 서버에 request를 보내 데이터를 받아 옴
+
+- **1.2 공공데이터 가져오기**
+
+    ```java
+    const request = require('request');
+
+    const jsonData = {
+    ServiceKey: '1QOQwNz1pQ9tHVUTtXXSvIUaELeSDfRLDAMJk722CSiM6LL7e68V8mmNUeqVnurFinZxM8%2FZf1cEkDeJyRPU%2Fg%3D%3D',
+    numOfRows: 10,
+    pageNo: 1,
+    sidoName: '서울',
+    searchCondition: 'HOUR'
+    };
+
+    var url = 'http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getCtprvnMesureSidoLIst';
+
+    var queryParams = '?' + encodeURIComponent('ServiceKey') + `=${jsonData.ServiceKey}`; /* Service Key*/
+    queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent(jsonData.numOfRows); /* 한 페이지 결과 수 */
+    queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent(jsonData.pageNo); /* 페이지 번호 */
+    queryParams += '&' + encodeURIComponent('sidoName') + '=' + encodeURIComponent(jsonData.sidoName); /* 시도 이름 (서울, 부산, 대구, 인천, 광주, 대전, 울 산, 경기, 강원, 충북, 충남, 전북, 전남, 경북, 경남, 제주, 세종) */
+    queryParams += '&' + encodeURIComponent('searchCondition') + '=' + encodeURIComponent(jsonData.searchCondition); /* 요청 데이터기간 (시간 : HOUR, 하 루 : DAILY) */
+
+    request.get(url + queryParams, (error, response, body) => {
+    console.log('error:', error);
+    console.log('statusCode:', response && response.statusCode);
+    const data = JSON.parse(body);
+    const result = data.list.map(it => {
+    const {cityName, coValue, no2Value, o3Value, pm10Value, pm25Value} = it;
+    return {cityName, coValue, no2Value, o3Value, pm10Value, pm25Value};
+    })
+    console.log(result)
+    ```
+
+\
+\
+[]()
+### 🍀 4. Error handling
+
+- 기존의 status 코드와 json을 전달 하면서 처리
+
+    ```javascript
+    return {
+        code: statusCode.OK,
+        json: authUtil.successTrue('메시지',data)
+    }
+    ```
+    ```javascript
+    res.status(statusCode.BAD_REQUEST)
+    .send(authUtil.successFalse('에러 메세지'))
+    ```
+- Error를 상속한 Class 정의
+
+    ```javascript
+    class DatabaseError extends Error {
+        constructor(code = 'GENERIC', status = statusCode.DB_ERROR, ...params) {
+            super(...params);
+            if(Error.captureStackTrace){
+                Error.captureStackTrace(this, DatabaseError);
+            }
+            this.code = code;
+            this.status = status;
+            this.message = 에러메시지;
+        }
+    }
+    ```
+- 다음과 같이 쓸 수 있다.
+
+    ```javascript
+    throw new DatabaseError();
+    return data;
+    ```
