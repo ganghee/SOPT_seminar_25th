@@ -4,8 +4,10 @@
    Article을 작성할 때 이미지 파일도 업로드 할 수 있습니다.
 
 
-   ![image](https://user-images.githubusercontent.com/35513039/70599621-e7baac00-1c30-11ea-9aef-7dd4fffdf3b9.png)
-
+   
+|POST|GET|
+|:--:|:--:|
+|![image](https://user-images.githubusercontent.com/35513039/70599621-e7baac00-1c30-11ea-9aef-7dd4fffdf3b9.png)|![image](https://user-images.githubusercontent.com/35513039/70752588-49d0f980-1d76-11ea-9035-ee8c280561d2.png)
 \
 \
 \
