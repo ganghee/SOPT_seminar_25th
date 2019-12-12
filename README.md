@@ -1266,8 +1266,14 @@ function 앞에 async 를 붙이고 처리할 비동기 메소드 앞에 await�
     return data;
     ```
 
-
-
+\
+\
+\
+\
+\
+\
+\
+[]()
 ## 출처 : https://github.com/WITH-SOPT-SERVER/SOPT-SERVER-SEMINAR
 
 ## ❄️25기 서버파트장 윤희성에게 감사드립니다❄️
