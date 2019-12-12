@@ -3,17 +3,17 @@ const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
 const db = require('../modules/db/pool')
 const blogData = require('../modules/data/blogData')
+const jwtExt = require('../modules/security/jwt-ext');
 
 const THIS_LOG = '카테고리';
 
 const blog = {
     create: ({
         title,
-        content,
-        writer
-        }) => {
+        content
+        }, token) => {
             return new Promise(async(resolve,reject) => {
-                if(!title || !content || !writer){
+                if(!title || !content){
                     resolve({
                         code: statusCode.NOT_FOUND,
                         json: authUtil.successFalse(
@@ -21,9 +21,10 @@ const blog = {
                         )
                     });
             }
+            const writer = jwtExt.verify(token).data.id
             const postBlogQuery = 'INSERT INTO blog(title, content, writer) VALUES (?, ?, ?)';
             const postBlogResult = await db.queryParam_Parse(postBlogQuery,[title, content, writer]);
-            if(!postBlogResult){
+            if(typeof(getUserpostBlogResultResult) == 'undefined' || postBlogResult.affectedRows == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -41,64 +42,65 @@ const blog = {
         return new Promise(async(resolve,reject) => {
             const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ?';
             const getBlogResult = await db.queryParam_Parse(getBlogQuery,[blogIdx]);
-            if(getBlogResult.length == 0){
+            if(typeof(getBlogResult) == 'undefined' || getBlogResult.length == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_FAIL(THIS_LOG)
                 )});
-            } 
-            const blog = blogData(getBlogResult[0]);
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_READ_SUCCESS(THIS_LOG),
-                    blog
-            )});
+            } else {
+                const blog = blogData(getBlogResult[0]);
+                resolve({
+                    code: statusCode.OK,
+                    json: authUtil.successTrue(
+                        responseMessage.X_READ_SUCCESS(THIS_LOG),
+                        blog
+                )});
+            }
         });
     },
     readAll: () => {
         return new Promise(async (resolve,reject) => {
             const getAllBlogQuery = 'SELECT * FROM blog';
             const getAllBlogResult = await db.queryParam_None(getAllBlogQuery);
-            if (!getAllBlogResult) {
+            if (typeof(getAllBlogResult) == 'undefined' || getAllBlogResult.affectedRows == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_ALL_FAIL(THIS_LOG)
                 )});
-            } 
-            const blogArr = [];
-            getAllBlogResult.forEach((rawBlog, index, result) => {
-                blogArr.push(blogData(rawBlog));
-            });
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
-                    blogArr
-            )});
+            } else {
+                const blogArr = [];
+                getAllBlogResult.forEach((rawBlog, index, result) => {
+                    blogArr.push(blogData(rawBlog));
+                });
+                resolve({
+                    code: statusCode.OK,
+                    json: authUtil.successTrue(
+                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                        blogArr
+                )});
+            }
         });
     },
     update: ({
         blogIdx,
         title,
-        content,
-        writer
-    }) => {
+        content
+    }, token) => {
         return new Promise(async(resolve,reject) => {
-            if(!blogIdx || !title || !content || !writer){
+            if(!blogIdx || !title || !content){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.NULL_VALUE
                     )
                 });
-            } 
-            const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ?';
-            const getBlogResult = await db.queryParam_Parse(getBlogQuery,[body.blogIdx]);
-            console.log(getBlogResult);
-            if (getBlogResult.length == 0) {
+            }
+            const writer = jwtExt.verify(token).data.id
+            const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ? AND writer = ?';
+            const getBlogResult = await db.queryParam_Parse(getBlogQuery,[blogIdx, writer]);
+            if (typeof(getBlogResult) == 'undefined' || getBlogResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -108,8 +110,7 @@ const blog = {
             }
             const putBlogQuery = 'UPDATE blog SET title = ?, content = ?, writer = ? WHERE blogIdx = ?';
             const putBlogResult = await db.queryParam_Parse(putBlogQuery,[title, content, writer, blogIdx])
-            console.log(putBlogResult);
-            if(!putBlogResult){
+            if(typeof(putBlogResult) == 'undefined' || putBlogResult.affectedRows == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -124,12 +125,12 @@ const blog = {
             )});
         });
     },
-    remove: (body) => {
+    remove: ({blogIdx}, token) => {
         return new Promise(async(resolve,reject) => {
-            const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ?';
-            const getBlogResult = await db.queryParam_Parse(getBlogQuery, [body.blogIdx] );
-
-            if (getBlogResult.length == 0) {
+            const writer = jwtExt.verify(token).data.id
+            const getBlogQuery = 'SELECT * FROM blog WHERE blogIdx = ? AND writer = ?';
+            const getBlogResult = await db.queryParam_Parse(getBlogQuery, [blogIdx, writer] );
+            if (typeof(getBlogResult) == 'undefined' || getBlogResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -137,11 +138,9 @@ const blog = {
                     )
                 });
             }
-            const deleteBlogQuery = 'DELETE FROM blog WHERE blogIdx = ?';
-            const deleteBlogResult = await db.queryParam_Parse(deleteBlogQuery,[body.blogIdx]);
-            console.log(deleteBlogResult);
-
-            if (!deleteBlogResult) {
+            const deleteBlogQuery = 'DELETE FROM blog WHERE blogIdx = ? AND writer = ?';
+            const deleteBlogResult = await db.queryParam_Parse(deleteBlogQuery,[blogIdx, writer]);
+            if (typeof(deleteBlogResult) == 'undefined' || deleteBlogResult.affectedRows == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(

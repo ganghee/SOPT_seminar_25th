@@ -3,11 +3,10 @@ const router = express.Router({mergeParams: true});
 const blogsControllers = require('../../controllers/blogsController');
 const {LoggedIn} = require('../../modules/utils/authUtil');
 
-router.get('/',blogsControllers.readAll);
-router.get('/:blogIdx',blogsControllers.read);
-router.use('/',LoggedIn);
-router.post('/',blogsControllers.create);
-router.put('/',blogsControllers.update);
-router.delete('/',blogsControllers.remove);
+router.get('/', blogsControllers.readAll);
+router.get('/:blogIdx', blogsControllers.read);
+router.post('/',LoggedIn, blogsControllers.create);
+router.put('/', LoggedIn, blogsControllers.update);
+router.delete('/', LoggedIn, blogsControllers.remove);
 
 module.exports = router;

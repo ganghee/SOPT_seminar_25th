@@ -3,17 +3,17 @@ const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
 const db = require('../modules/db/pool');
 const commentData = require('../modules/data/commentData');
+const jwtExt = require('../modules/security/jwt-ext');
 
 const THIS_LOG = '댓글';
 
 const comment = {
     create: ({
         title,
-        content,
-        writer
-    }, articleIdx) => {
+        content
+    }, articleIdx, token) => {
         return new Promise(async(resolve,reject) => {
-            if(!title || !content || !writer){
+            if(!title || !content){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -21,9 +21,10 @@ const comment = {
                     )
                 });
             }
-            const postCommentQuery = 'INSERT INTO comment(title, content, writer, articleIdx) VALUES (?, ?, ?, ?)';
+            const writer = jwtExt.verify(token).data.id
+            const postCommentQuery = 'INSERT INTO comment(title, content, writer, articleIdxx) VALUES (?, ?, ?, ?)';
             const postCommentResult = await db.queryParam_Parse(postCommentQuery,[title, content, writer, articleIdx]);
-            if(!postCommentResult){
+            if(typeof(postCommentResult) == 'undefined' || postCommentResult.affectedRows == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -35,82 +36,86 @@ const comment = {
                 json: authUtil.successTrue(
                     responseMessage.X_CREATE_SUCCESS(THIS_LOG)
             )});
+            
         });
     },
     read: (articleIdx, commentIdx) => {
         return new Promise(async (resolve,reject) => {
-            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdx = ?';
+            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdxx = ?';
             const getCommentResult = await db.queryParam_Parse(getCommentQuery,[articleIdx, commentIdx]);
-            if(getCommentResult.length == 0){
+            console.log('getCommentResult',getCommentResult);
+            if(typeof(getCommentResult) == 'undefined' || getCommentResult.length == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_FAIL(THIS_LOG)
                 )});
+            } else {
+                const comment = commentData(getCommentResult[0]);
+                resolve({
+                    code: statusCode.OK,
+                    json: authUtil.successTrue(
+                        responseMessage.X_READ_SUCCESS(THIS_LOG),
+                        comment
+                )});
             }
-            const comment = commentData(getCommentResult[0]);
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_READ_SUCCESS(THIS_LOG),
-                    comment
-            )});
         });
     },
     readAll: (articleIdx) => {
         return new Promise(async (resolve,reject) => {
             const getAllCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ?';
             const getAllCommentResult = await db.queryParam_Parse(getAllCommentQuery,[articleIdx]);
-            if (!getAllCommentResult) {
+            if (typeof(getAllCommentResult) == 'undefined' || getAllCommentResult.affectedRows == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_ALL_FAIL(THIS_LOG)
                 )});
-            } 
-            const commentArr = [];
-            getAllCommentResult.forEach((rawComment) => {
-                commentArr.push(commentData(rawComment));
-            });
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
-                    commentArr
-            )});
+            } else {
+                const commentArr = [];
+                getAllCommentResult.forEach((rawComment) => {
+                    commentArr.push(commentData(rawComment));
+                });
+                resolve({
+                    code: statusCode.OK,
+                    json: authUtil.successTrue(
+                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                        commentArr
+                )});
+            }
         });
     },
     readAllComment: () => {
         return new Promise(async (resolve,reject) => {
             const getAllCommentQuery = 'SELECT * FROM comment';
             const getCommentsResult = await db.queryParam_Parse(getAllCommentQuery);
-            if (!getCommentsResult) {
+            if (typeof(getCommentsResult) == 'undefined' || getCommentsResult.affectedRows == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_READ_ALL_FAIL(THIS_LOG)
                 )});
-            } 
-            const commentArr = [];
-            getCommentsResult.forEach((rawComment) => {
-                commentArr.push(commentData(rawComment));
-            });
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
-                    commentArr
-            )});
-        });
+            } else {
+                const commentArr = [];
+                getCommentsResult.forEach((rawComment) => {
+                    commentArr.push(commentData(rawComment));
+                });
+                resolve({
+                    code: statusCode.OK,
+                    json: authUtil.successTrue(
+                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
+                        commentArr
+                )});
+            };
+        })
     },
     update: ({
         commentIdx,
         title,
-        content,
-        writer
-    }, articleIdx) => {
+        content
+    }, articleIdx, token) => {
         return new Promise(async(resolve, reject) => {
-            if(!title || !content || !writer){
+            if(!title || !content){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -118,10 +123,10 @@ const comment = {
                     )
                 });
             } 
-            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdx = ?';
-            const getCommentResult = await db.queryParam_Parse(getCommentQuery,[articleIdx, commentIdx]);
-            console.log(getCommentResult);
-            if (getCommentResult.length == 0) {
+            const writer = jwtExt.verify(token).data.id
+            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdx = ? AND writer = ?';
+            const getCommentResult = await db.queryParam_Parse(getCommentQuery,[articleIdx, commentIdx, writer]);
+            if (typeof(getCommentResult) == 'undefined' || getCommentResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -129,10 +134,9 @@ const comment = {
                     )
                 });
             }
-            const putCommentQuery = 'UPDATE comment SET title = ?, content = ?, writer = ? WHERE articleIdx = ? AND commentIdx = ?';
-            const putCommentResult = await db.queryParam_Parse(putCommentQuery,[title, content, writer, articleIdx, commentIdx])
-            console.log(putCommentResult);
-            if(!putCommentResult){
+            const putCommentQuery = 'UPDATE comment SET title = ?, content = ? WHERE articleIdx = ? AND commentIdx = ? AND writer = ?';
+            const putCommentResult = await db.queryParam_Parse(putCommentQuery,[title, content, articleIdx, commentIdx, writer])
+            if(typeof(putCommentResult) == 'undefined' || putCommentResult.affectedRows == 0){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -145,13 +149,15 @@ const comment = {
                 json: authUtil.successTrue(
                     responseMessage.X_UPDATE_SUCCESS(THIS_LOG)
             )});
+            
         });
     },
-    remove: (body, articleIdx) => {
+    remove: ({commentIdx}, articleIdx, token) => {
         return new Promise(async(resolve, reject) => {
-            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdx = ?';
-            const getCommentResult = await db.queryParam_Parse(getCommentQuery, [articleIdx, body.commentIdx]);
-            if (getCommentResult.length == 0) {
+            const writer = jwtExt.verify(token).data.id;
+            const getCommentQuery = 'SELECT * FROM comment WHERE articleIdx = ? AND commentIdx = ? AND writer = ?';
+            const getCommentResult = await db.queryParam_Parse(getCommentQuery, [articleIdx, commentIdx, writer]);
+            if (typeof(getCommentResult) == 'undefined' || getCommentResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
@@ -159,10 +165,9 @@ const comment = {
                     )
                 });
             }
-            const deleteCommentQuery = 'DELETE FROM comment WHERE articleIdx = ? AND commentIdx = ?';
-            const deleteCommentResult = await db.queryParam_Parse(deleteCommentQuery,[articleIdx, body.commentIdx]);
-            console.log(deleteCommentResult);
-            if (!deleteCommentResult) {
+            const deleteCommentQuery = 'DELETE FROM comment WHERE articleIdx = ? AND commentIdx = ? AND writer = ?';
+            const deleteCommentResult = await db.queryParam_Parse(deleteCommentQuery,[articleIdx, commentIdx, writer]);
+            if (typeof(getCommentResult) == 'undefined' || deleteCommentResult.affectedRows == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(

@@ -27,7 +27,7 @@ module.exports = {
         });
     },
     create: async(req, res) => {
-        Blog.create(req.body).then(({
+        Blog.create(req.body, req.headers.token).then(({
             code,
             json
         }) => {
@@ -38,7 +38,7 @@ module.exports = {
         });
     },
     update: async(req, res) => {
-        Blog.update(req.body).then(({
+        Blog.update(req.body, req.headers.token).then(({
             code,
             json
         }) => {
@@ -49,7 +49,7 @@ module.exports = {
         });
     },
     remove: async(req, res) => {
-        Blog.remove(req.body).then(({
+        Blog.remove(req.body, req.headers.token).then(({
             code,
             json
         }) => {

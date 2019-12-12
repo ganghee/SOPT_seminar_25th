@@ -27,7 +27,7 @@ module.exports = {
         });
     },
     create: async(req, res) =>{
-        Comment.create(req.body, req.params.articleIdx).then(({
+        Comment.create(req.body, req.params.articleIdx, req.headers.token).then(({
             code,
             json
         }) => {
@@ -38,7 +38,7 @@ module.exports = {
         });
     },
     update: async(req, res) => {
-        Comment.update(req.body, req.params.articleIdx).then(({
+        Comment.update(req.body, req.params.articleIdx, req.headers.token).then(({
             code,
             json
         }) => {
@@ -49,7 +49,7 @@ module.exports = {
         });
     },
     remove: async(req, res) => {
-        Comment.remove(req.body, req.params.articleIdx).then(({
+        Comment.remove(req.body, req.params.articleIdx, req.headers.token).then(({
             code,
             json
         }) => {

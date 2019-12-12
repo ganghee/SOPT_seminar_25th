@@ -27,7 +27,7 @@ module.exports = {
         });
     },
     create: async(req, res) => {
-        Article.create(req.files, req.body, req.params.blogIdx).then(({
+        Article.create(req.files, req.body, req.params.blogIdx, req.headers.token).then(({
             code,
             json
         }) => {
@@ -38,7 +38,7 @@ module.exports = {
         });
     },
     update: async(req, res) => {
-        Article.update(req.files, req.body, req.params.blogIdx).then(({
+        Article.update(req.files, req.body, req.params.blogIdx, req.headers.token).then(({
             code,
             json
         }) => {
@@ -49,7 +49,7 @@ module.exports = {
         });
     },
     remove: async(req, res) => {
-        Article.remove(req.body, req.params.blogIdx).then(({
+        Article.remove(req.body, req.params.blogIdx, req.headers.token).then(({
             code,
             json
         }) => {

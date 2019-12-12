@@ -2,6 +2,7 @@ const statusCode = require('../modules/utils/statusCode');
 const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
 const User = require('../model/user');
+const jwt = require('../modules/security/jwt')
 
 module.exports = {
     signUp: async(req, res) => {
@@ -27,7 +28,7 @@ module.exports = {
         });
     },
     update: async(req, res) => {
-        User.update(req.body).then(({
+        User.update(req.body, req.headers.token).then(({
             code,
             json
         }) => {
@@ -38,7 +39,7 @@ module.exports = {
         });
     },
     remove: async(req, res) => {
-        User.remove(req.body).then(({
+        User.remove(req.headers.token).then(({
             code,
             json
         }) => {
