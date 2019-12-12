@@ -1,7 +1,6 @@
 const statusCode = require('../modules/utils/statusCode');
 const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
-
 const Blog = require('../model/blog');
 
 module.exports = {

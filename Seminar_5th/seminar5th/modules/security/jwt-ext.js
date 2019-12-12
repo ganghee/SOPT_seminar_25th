@@ -3,19 +3,19 @@ const jwt = require('jsonwebtoken');
 const {
     secretOrPrivateKey
 } = require('../../config/secretKey');
-const resMessage = require('./util/responseMessage');
-const statusCode = require('./util/statusCode');
+const resMessage = require('../utils/responseMessage');
+const statusCode = require('../utils/statusCode');
 
 const options = {
     algorithm: "HS256",
-    expiresIn: "1m",
-    issuer: "with-sopt"
+    expiresIn: "24h",
+    issuer: "ganghee"
 };
 
 const refreshOptions = {
     algorithm: "HS256",
     expiresIn: "2h",
-    issuer: "with-sopt"
+    issuer: "ganghee"
 };
 
 module.exports = {

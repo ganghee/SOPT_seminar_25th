@@ -1,8 +1,6 @@
 const statusCode = require('../modules/utils/statusCode');
 const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
-const upload = require('../config/multer');
-
 const Article = require('../model/article');
 
 module.exports = {
@@ -29,8 +27,7 @@ module.exports = {
         });
     },
     create: async(req, res) => {
-        console.log("image",req.file.location);
-        Article.create(req.file.location, req.body, req.params.blogIdx).then(({
+        Article.create(req.files, req.body, req.params.blogIdx).then(({
             code,
             json
         }) => {
@@ -41,7 +38,7 @@ module.exports = {
         });
     },
     update: async(req, res) => {
-        Article.update(req.body, req.params.blogIdx).then(({
+        Article.update(req.files, req.body, req.params.blogIdx).then(({
             code,
             json
         }) => {

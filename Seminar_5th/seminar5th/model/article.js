@@ -1,10 +1,9 @@
 const statusCode = require('../modules/utils/statusCode');
 const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
-
 const db = require('../modules/db/pool');
 const articleData = require('../modules/data/articleData');
-const upload = require('../config/multer');
+const articleImageData = require('../modules/data/articleImageData');
 
 const THIS_LOG = '게시글';
 
@@ -15,7 +14,6 @@ const article = {
         writer
     },blogIdx) => {
         return new Promise(async(resolve,reject) => {
-            console.log(image);
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -24,14 +22,25 @@ const article = {
                     )
                 });
             }
-            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx, imageUrl) VALUES (?, ?, ?, ?, ?)';
-            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx, image]);
+            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)';
+            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx]);
             if(!postArticleResult){
                 resolve({
                     code: statusCode.NOT_FOUND,
                     json: authUtil.successFalse(
                         responseMessage.X_CREATE_FAIL(THIS_LOG)
                 )});
+            }
+            for(var i in image) {
+                const postArticleImageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
+                const postArticleImageResult = await db.queryParam_Parse(postArticleImageQuery,[image[i].location, postArticleResult.insertId]);
+                if(!postArticleImageResult){
+                    resolve({
+                        code: statusCode.NOT_FOUND,
+                        json: authUtil.successFalse(
+                            responseMessage.X_CREATE_FAIL(THIS_LOG)
+                    )});
+                }
             }
             resolve({
                 code: statusCode.OK,
@@ -50,8 +59,15 @@ const article = {
                     json: authUtil.successFalse(
                         responseMessage.X_READ_FAIL(THIS_LOG)
                 )});
-            } 
+            }
+            const getArticleImageQuery = "SELECT * FROM articleImage WHERE articleIdx = ?";
+            const getArticleImageResult = await db.queryParam_Parse(getArticleImageQuery,[articleIdx]);
+            const articleImageArr = []
+            getArticleImageResult.forEach((rawArticle, index, result) => {
+                articleImageArr.push(articleImageData(rawArticle).articleImageUrl);
+            });
             const article = articleData(getArticleResult[0]);
+            article.articleImageArr = articleImageArr
             resolve({
                 code: statusCode.OK,
                 json: authUtil.successTrue(
@@ -71,11 +87,22 @@ const article = {
                         responseMessage.X_READ_ALL_FAIL(THIS_LOG)
                 )});
             }
-            const articleArr = [];
+            var articleArr = [];
+            const articleIdxArr = []
             getAllArticleResult.forEach((rawArticle, index, result) => {
-                articleArr.push(articleData(rawArticle));
-                //articleArr.imageArr.push(rawArticle)
+                articleIdxArr.push(articleData(rawArticle).articleIdx);
             });
+            for(var i in articleIdxArr){
+                articleArr.push(await article.read(blogIdx, articleIdxArr[i]).then(({
+                    code,
+                    json
+                }) => {
+                    articleArr.push(json.data);
+                }).catch(err => {
+                    console.log(err);
+                }));
+            }
+            articleArr = articleArr.filter(function(x) {return x !== undefined && x != null})
             resolve({
                 code: statusCode.OK,
                 json: authUtil.successTrue(
@@ -94,7 +121,7 @@ const article = {
                     json: authUtil.successFalse(
                         responseMessage.X_READ_FAIL(THIS_LOG)
                 )});
-            } 
+            }
             const articleArr = [];
             getArticlesResult.forEach((rawArticle, index, result) => {
                 articleArr.push(articleData(rawArticle));
@@ -107,13 +134,14 @@ const article = {
             )});
         });
     },
-    update: ({
+    update: (image,{
         articleIdx,
         title,
         content,
         writer
     }, blogIdx) => {
         return new Promise(async(resolve,reject) => {
+            console.log('update',image, article, title, content, writer);
             if(!title || !content || !writer){
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -123,8 +151,7 @@ const article = {
                 });
             } 
             const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
-            const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, body.articleIdx]);
-            console.log(getArticleResult);
+            const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, articleIdx]);
             if (getArticleResult.length == 0) {
                 resolve({
                     code: statusCode.NOT_FOUND,
@@ -143,6 +170,26 @@ const article = {
                         responseMessage.X_UPDATE_FAIL(THIS_LOG)
                     )
                 });
+            }
+            const deleteArticleImageQuery = 'DELETE FROM articleImage WHERE articleIdx = ?';
+            const deleteArticleImageResult = await db.queryParam_Parse(deleteArticleImageQuery,[articleIdx]);
+            if(!deleteArticleImageResult){
+                resolve({
+                    code: statusCode.NOT_FOUND,
+                    json: authUtil.successFalse(
+                        responseMessage.X_DELETE_FAIL(THIS_LOG)
+                )});
+            }
+            for(var i in image) {
+                const postArticleImageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
+                const postArticleImageResult = await db.queryParam_Parse(postArticleImageQuery,[image[i].location, articleIdx]);
+                if(!postArticleImageResult){
+                    resolve({
+                        code: statusCode.NOT_FOUND,
+                        json: authUtil.successFalse(
+                            responseMessage.X_CREATE_FAIL(THIS_LOG)
+                    )});
+                }
             }
             resolve({
                 code: statusCode.OK,

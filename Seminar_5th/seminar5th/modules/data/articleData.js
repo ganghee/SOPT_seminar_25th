@@ -1,4 +1,3 @@
-
 module.exports = 
     (rawArticleData) => {
         articleData = {
@@ -6,8 +5,7 @@ module.exports =
             "title": rawArticleData.title,
             "content": rawArticleData.content,
             "writer": rawArticleData.writer,
-            "blogIdx": rawArticleData.blogIdx,
-            "imageUrl":rawArticleData.imageUrl
+            "blogIdx": rawArticleData.blogIdx
         }
         return articleData
     }

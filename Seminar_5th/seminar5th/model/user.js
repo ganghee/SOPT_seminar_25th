@@ -2,12 +2,9 @@ const statusCode = require('../modules/utils/statusCode');
 const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
 let moment = require('moment');
-const crypto = require('crypto');
-const jwt = require('../modules/security/jwt');
+const jwt = require('../modules/security/jwt-ext');
 const encryptionManager = require('../modules/security/encryptionManager')
-
 const db = require('../modules/db/pool');
-const userData = require('../modules/data/userData');
 
 const THIS_LOG = '사용자 정보';
 
@@ -46,9 +43,8 @@ module.exports = {
             const salt = await encryptionManager.makeRandomByte();
             const hashedPassword = await encryptionManager.encryption(pw,salt);
             let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
-            const jwtToken = jwt.sign({id, date});
-            const postUserQuery = "INSERT INTO user(userId, userPw, token, signupDate, salt) VALUES(?, ?, ?, ?, ?)";
-            const postUserResult = await db.queryParam_Parse(postUserQuery,[id, hashedPassword, jwtToken.token, date, salt]);
+            const postUserQuery = "INSERT INTO user(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)";
+            const postUserResult = await db.queryParam_Parse(postUserQuery,[id, hashedPassword, date, salt]);
             if(!postUserResult){
                 resolve({
                     code: statusCode.UNAUTHORIZED,
@@ -99,13 +95,13 @@ module.exports = {
                     )
                 });
             }
-            const userInfo = userData(getUserResult[0])
-            const token = {token : userInfo.token};
+            let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
+            const jwtToken = jwt.publish({id,date})
             resolve({
                 code: statusCode.OK,
                 json: authUtil.successTrue(
                     responseMessage.LOGIN_SUCCESS,
-                    token
+                    {token :jwtToken.token}
                 )
             })
         });

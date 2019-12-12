@@ -7,8 +7,8 @@ const {LoggedIn} = require('../../../modules/utils/authUtil');
 router.get('/',ArticlesController.readAll);
 router.get('/:articleIdx',ArticlesController.read);
 router.use('/',LoggedIn);
-router.post('/', upload.single('image'), ArticlesController.create);
-router.put('/',ArticlesController.update);
+router.post('/', upload.array('image',3), ArticlesController.create);
+router.put('/',upload.array('image',3), ArticlesController.update);
 router.delete('/',ArticlesController.remove);
 
 module.exports = router;
