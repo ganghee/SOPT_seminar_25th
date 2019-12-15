@@ -1,243 +1,155 @@
-const statusCode = require('../modules/utils/statusCode');
-const responseMessage = require('../modules/utils/responseMessage');
-const authUtil = require('../modules/utils/authUtil');
-const db = require('../modules/db/pool');
+const pool = require('../modules/db/pool');
 const articleData = require('../modules/data/articleData');
 const articleImageData = require('../modules/data/articleImageData');
 const jwtExt = require('../modules/security/jwt-ext');
 const { NotMatchedError, ParameterError, DatabaseError } = require('../errors');
-
-const THIS_LOG = '게시글';
+const TABLE_NAME_ARTICLE = 'article';
+const TABLE_NAME_ARTICLE_IMAGE = 'articleImage';
 
 const article = {
-    create: (image,{
-        title,
-        content
-    },blogIdx,token) => {
-        return new Promise(async(resolve,reject) => {
-            if(!title || !content){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            }
+    create: async (
+        image,
+        {title, content}, 
+        blogIdx, 
+        token) => {
+            if(!title || !content) throw new ParameterError
             const writer = jwtExt.verify(token).data.id
-            const postArticleQuery = 'INSERT INTO article(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)';
-            const postArticleResult = await db.queryParam_Parse(postArticleQuery,[title, content, writer, blogIdx]);
-            if(typeof(postArticleResult) == 'undefined' || postArticleResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_CREATE_FAIL(THIS_LOG)
-                )});
+            const query = `INSERT INTO ${TABLE_NAME_ARTICLE}(title, content, writer, blogIdx) VALUES (?, ?, ?, ?)`;
+            const values = [title, content, writer, blogIdx];
+            const result = await pool.queryParam_Parse(query, values);
+            if(typeof(result) == 'undefined'){
+                throw new DatabaseError;
+            } else if(result.affectedRows == 0){
+                throw new NotMatchedError
             }
             for(var i in image) {
-                const postArticleImageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
-                const postArticleImageResult = await db.queryParam_Parse(postArticleImageQuery,[image[i].location, postArticleResult.insertId]);
-                if(typeof(postArticleImageResult) == 'undefined' || postArticleImageResult.affectedRows == 0){
-                    resolve({
-                        code: statusCode.NOT_FOUND,
-                        json: authUtil.successFalse(
-                            responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )});
-                }
+                const imageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
+                const imageValues = [image[i].location, articleResult.insertId];
+                const imageResult = await pool.queryParam_Parse(imageQuery, imageValues);
+                if(typeof(imageResult) == 'undefined'){
+                    throw new DatabaseError;
+                } else if(imageResult.affectedRows == 0){
+                    throw new NotMatchedError
+                }      
             }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_CREATE_SUCCESS(THIS_LOG)
-            )});
-        });
     },
-    read: (blogIdx, articleIdx) => {
-        return new Promise(async (resolve,reject) => {
-            const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ?';
-            const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, articleIdx]);
-            if(typeof(getArticleResult) == 'undefined' || getArticleResult.length == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_READ_FAIL(THIS_LOG)
-                )});
-            }
-            const getArticleImageQuery = "SELECT * FROM articleImage WHERE articleIdx = ?";
-            const getArticleImageResult = await db.queryParam_Parse(getArticleImageQuery,[articleIdx]);
-            if(typeof(getArticleImageResult) == 'undefined' || getArticleImageResult.length == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_READ_FAIL(THIS_LOG)
-                )});
+    read: async (articleIdx) => {
+        if(!articleIdx) throw new ParameterError
+        const query = `SELECT * FROM ${TABLE_NAME_ARTICLE} WHERE articleIdx = ?`;
+        const values = [articleIdx];
+        const result = await pool.queryParam_Parse(query, values);
+        if(typeof(result) == 'undefined'){
+            throw new DatabaseError;
+        } else if(result.length == 0){
+            throw new NotMatchedError
+        } else {
+            const imageQuery = `SELECT * FROM ${TABLE_NAME_ARTICLE_IMAGE} WHERE articleIdx = ?`;
+            const imageValues = [articleIdx];
+            const imageResult = await pool.queryParam_Parse(imageQuery, imageValues);
+            let imageArr = [];
+            if(typeof(imageResult) == 'undefined'){
+                throw new DatabaseError;
+            } else if(imageResult.length == 0){
+                    imageArr = [];
             } else {
-                const articleImageArr = []
-                getArticleImageResult.forEach((rawArticle, index, result) => {
-                    articleImageArr.push(articleImageData(rawArticle).articleImageUrl);
+                imageResult.forEach((rawArticle, index, result) => {
+                    imageArr.push(articleImageData(rawArticle).articleImageUrl);
                 });
-                const article = articleData(getArticleResult[0]);
-                article.articleImageArr = articleImageArr
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.X_READ_SUCCESS(THIS_LOG),
-                        article
-                )});
             }
-        });
+            const article = articleData(result[0]);
+            article.imageArr = imageArr;
+            return article;
+        }
     },
-    readAll: (blogIdx) => {
-        return new Promise(async (resolve,reject) => {
-            const getAllArticleQuery = 'SELECT * FROM article WHERE blogIdx = ?';
-            const getAllArticleResult = await db.queryParam_Parse(getAllArticleQuery,[blogIdx]);
-            if (typeof(getAllArticleResult) == 'undefined' || getAllArticleResult.affectedRows == 0) {
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_READ_ALL_FAIL(THIS_LOG)
-                )});
-            } else {
-                var articleArr = [];
-                const articleIdxArr = []
-                getAllArticleResult.forEach((rawArticle, index, result) => {
-                    articleIdxArr.push(articleData(rawArticle).articleIdx);
-                });
-                for(var i in articleIdxArr){
-                    articleArr.push(await article.read(blogIdx, articleIdxArr[i]).then(({
-                        code,
-                        json
-                    }) => {
-                        articleArr.push(json.data);
-                    }).catch(err => {
-                        console.log(err);
-                    }));
-                }
-                articleArr = articleArr.filter(function(x) {return x !== undefined && x != null})
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.X_READ_ALL_SUCCESS(THIS_LOG),
-                        articleArr
-                )});
+    readAll: async (blogIdx) => {
+        if(!blogIdx) throw new ParameterError;
+        const query = `SELECT * FROM ${TABLE_NAME_ARTICLE} WHERE blogIdx = ?`;
+        const values = [blogIdx];
+        const result = await pool.queryParam_Parse(query, values);
+        if(typeof(result) == 'undefined'){
+            throw new DatabaseError;
+        } else if(result.length == 0){
+            throw new NotMatchedError;
+        } else {
+            var articleArr = [];
+            const articleIdxArr = [];
+            result.forEach((rawArticle, index, result) => {
+                articleIdxArr.push(articleData(rawArticle).articleIdx);
+            });
+            for(var i in articleIdxArr){
+                await article.read(articleIdxArr[i])
+                .then(result => articleArr.push(result))
+                .catch(err => {throw new DatabaseError});
             }
-        });
+            return articleArr;
+        }
     },
-    readAllArticle: () => {
-        return new Promise(async (resolve,reject) => {
-            const getArticleQuery = 'SELECT * FROM article';
-            const getArticlesResult = await db.queryParam_None(getArticleQuery);
-            if(typeof(getArticlesResult) == 'undefined' || getArticlesResult.length == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_READ_FAIL(THIS_LOG)
-                )});
-            } else {
-                const articleArr = [];
-                getArticlesResult.forEach((rawArticle, index, result) => {
-                    articleArr.push(articleData(rawArticle));
-                });
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.X_READ_SUCCESS(THIS_LOG),
-                        articleArr
-                )});
-            }
-        });
+    readAllArticle: async () => {
+        const query = `SELECT * FROM ${TABLE_NAME_ARTICLE}`;
+        const result = await pool.queryParam_None(query);
+        if(typeof(result) == 'undefined'){
+            throw new DatabaseError;
+        } else {
+            const articleArr = [];
+            result.forEach((rawArticle, index, result) => {
+                articleArr.push(articleData(rawArticle));
+            });
+            return articleArr;
+        }
     },
-    update: (image,{
+    update: async (image,{
         articleIdx,
         title,
         content
     }, blogIdx,token) => {
-        return new Promise(async(resolve,reject) => {
-            if(!title || !content){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            } 
-            const writer = jwtExt.verify(token).data.id;
-            const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
-            const getArticleResult = await db.queryParam_Parse(getArticleQuery,[blogIdx, articleIdx, writer]);
-            if (typeof(getArticleResult) == 'undefined' || getArticleResult.length == 0) {
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
+        if(!title || !content) throw new ParameterError
+        const writer = jwtExt.verify(token).data.id
+        const putQuery = `UPDATE ${TABLE_NAME_ARTICLE} SET title = ?, content = ? WHERE blogIdx = ? AND articleIdx = ? AND writer = ?`;
+        const putValue = [title, content, blogIdx, articleIdx, writer];
+        const putResult = await pool.queryParam_Parse(putQuery,putValue);
+        console.log('putResult',putResult);
+        if(typeof(putResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(putResult.affectedRows == 0){
+            throw new NotMatchedError;
+        }
+        const deleteImageQuery = `DELETE FROM ${TABLE_NAME_ARTICLE_IMAGE} WHERE articleIdx = ?`;
+        const deleteImageValues = [articleIdx]
+        const deleteImageResult = await pool.queryParam_Parse(deleteImageQuery, deleteImageValues);
+        if(typeof(deleteImageResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(deleteImageResult.affectedRows == 0){
+            throw new NotMatchedError;
+        }
+        for(var i in image) {
+            const postImageQuery = `INSERT INTO ${TABLE_NAME_ARTICLE_IMAGE}(articleImageUrl, articleIdx) VALUES(?, ?)`;
+            const postImageValues = [image[i].location, articleIdx];
+            const postImageResult = await pool.queryParam_Parse(postImageQuery, postImageValues);
+            if(typeof(postImageResult) == 'undefined'){
+                throw new DatabaseError;
+            } else if(postImageResult.affectedRows == 0){
+                throw new NotMatchedError;
             }
-            const putArticleQuery = 'UPDATE article SET title = ?, content = ? WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
-            const putArticleResult = await db.queryParam_Parse(putArticleQuery,[title, content, blogIdx, articleIdx, writer])
-            if(typeof(putArticleResult) == 'undefined' || putArticleResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_UPDATE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            const deleteArticleImageQuery = 'DELETE FROM articleImage WHERE articleIdx = ?';
-            const deleteArticleImageResult = await db.queryParam_Parse(deleteArticleImageQuery,[articleIdx]);
-            if(typeof(deleteArticleImageResult) == 'undefined' || deleteArticleImageResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_DELETE_FAIL(THIS_LOG)
-                )});
-            }
-            for(var i in image) {
-                const postArticleImageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
-                const postArticleImageResult = await db.queryParam_Parse(postArticleImageQuery,[image[i].location, articleIdx]);
-                if(typeof(postArticleImageResult) == 'undefined' || postArticleImageResult.affectedRows == 0){
-                    resolve({
-                        code: statusCode.NOT_FOUND,
-                        json: authUtil.successFalse(
-                            responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )});
-                }
-            }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_UPDATE_SUCCESS(THIS_LOG)
-            )});
-        });
+        }
     },
-    remove: (body, blogIdx, token) => {
-        return new Promise(async(resolve,reject) => {
-            const writer = jwtExt.verify(token).data.id
-            const getArticleQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
-            const getArticleResult = await db.queryParam_Parse(getArticleQuery, [blogIdx, body.articleIdx, writer] );
-            if (typeof(getArticleResult) == 'undefined' || getArticleResult.length == 0) {
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            }
-            const deleteArticleQuery = 'DELETE FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
-            const deleteArticleResult = await db.queryParam_Parse(deleteArticleQuery,[blogIdx, body.articleIdx, writer]);
-            if (typeof(deleteArticleResult) == 'undefined' || deleteArticleResult.affectedRows == 0) {
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.X_DELETE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_DELETE_SUCCESS(THIS_LOG)
-                )
-            });
-        });
+    delete: async ({articleIdx}, blogIdx, token) => {
+        const writer = jwtExt.verify(token).data.id
+        const getQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
+        const getValues = [blogIdx, articleIdx, writer];
+        const getResult = await pool.queryParam_Parse(getQuery, getValues);
+        if(typeof(getResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(getResult.affectedRows == 0){
+            throw new NotMatchedError;
+        }
+        const deleteQuery = 'DELETE FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
+        const deleteValues = [blogIdx, articleIdx, writer];
+        const deleteResult = await pool.queryParam_Parse(deleteQuery, deleteValues);
+        if(typeof(deleteResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(deleteResult.affectedRows == 0){
+            throw new NotMatchedError;
+        }
     }
 }
 

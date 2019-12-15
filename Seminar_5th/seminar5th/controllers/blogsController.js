@@ -1,62 +1,58 @@
-const statusCode = require('../modules/utils/statusCode');
-const responseMessage = require('../modules/utils/responseMessage');
-const authUtil = require('../modules/utils/authUtil');
 const Blog = require('../model/blog');
+const {util, status, message} = require('../modules/utils');
+const NAME = '카테고리';
 
 module.exports = {
     readAll: async(req, res) => {
-        Blog.readAll().then(({
-            code,
-            json
-        }) => {
-            res.status(code).send(json);
-        }).catch(err => {
+        Blog.readAll()
+        .then(result => {
+            res.status(status.OK)
+            .send(util.successTrue(message.X_READ_SUCCESS(NAME), result));})
+        .catch(err => {
             console.log(err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+            res.status(err.status || 500);
+            res.send(util.successFalse(err.message));
         });
     },
     read: async(req, res) => {
-        Blog.read(req.params.blogIdx).then(({
-            code,
-            json
-        }) => {
-            res.status(code).send(json);
-        }).catch(err => {
+        Blog.read(req.params.blogIdx)
+        .then(result => {
+            res.status(status.OK)
+            .send(util.successTrue(message.X_READ_SUCCESS(NAME), result));})
+        .catch(err => {
             console.log(err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+            res.status(err.status || 500);
+            res.send(util.successFalse(err.message));
         });
     },
     create: async(req, res) => {
-        Blog.create(req.body, req.headers.token).then(({
-            code,
-            json
-        }) => {
-            res.status(code).send(json);
-        }).catch(err => {
-            console.log(err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+        Blog.create(req.body, req.headers.token)
+        .then(
+            res.status(status.OK)
+            .send(util.successTrue(message.X_CREATE_SUCCESS(NAME))))
+        .catch(err => {
+            res.status(err.status || 500);
+            res.send(util.successFalse(err.message));
         });
     },
     update: async(req, res) => {
-        Blog.update(req.body, req.headers.token).then(({
-            code,
-            json
-        }) => {
-            res.status(code).send(json);
-        }).catch(err => {
-            console.log(err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+        Blog.update(req.body, req.headers.token)
+        .then(
+            res.status(status.OK)
+            .send(util.successTrue(message.X_UPDATE_SUCCESS(NAME))))
+        .catch(err => {
+            res.status(err.status || 500);
+            res.send(util.successFalse(err.message));
         });
     },
     remove: async(req, res) => {
-        Blog.remove(req.body, req.headers.token).then(({
-            code,
-            json
-        }) => {
-            res.status(code).send(json);
-        }).catch(err => {
-            console.log(err);
-            res.status(statusCode.INTERNAL_SERVER_ERROR, authUtil.successFalse(responseMessage.INTERNAL_SERVER_ERROR));
+        Blog.remove(req.body, req.headers.token)
+        .then(
+            res.status(status.OK)
+            .send(util.successTrue(message.X_DELETE_SUCCESS(NAME))))
+        .catch(err => {
+            res.status(err.status || 500);
+            res.send(util.successFalse(err.message));
         });
     }
 }

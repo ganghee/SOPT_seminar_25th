@@ -3,7 +3,7 @@ const jwt = require('../security/jwt');
 const router = express.Router({mergeParams: true});
 const resMessage = require('./responseMessage');
 const statusCode = require('./statusCode');
-const util = require('./utils');
+const util = require('./util');
 
 const authUtil = {
     successTrue: (message, data) => { 

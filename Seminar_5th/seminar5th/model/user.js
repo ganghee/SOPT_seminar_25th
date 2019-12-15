@@ -3,7 +3,7 @@ const responseMessage = require('../modules/utils/responseMessage');
 const authUtil = require('../modules/utils/authUtil');
 let moment = require('moment');
 const jwtExt = require('../modules/security/jwt-ext');
-const encryptionManager = require('../modules/security/encryptionManager')
+const encryptionManager = require('../modules/security/encryptionManager');
 const db = require('../modules/db/pool');
 
 const THIS_LOG = '사용자 정보';
@@ -22,6 +22,7 @@ module.exports = {
                     )
                 });
             }
+            //유저가 있으면 생성 X
             const getUserQuery = "SELECT * FROM user WHERE userId = ?";
             const getUserResult = await db.queryParam_Parse(getUserQuery,[id]);
             if(typeof(getUserResult) == 'undefined' || getUserResult.affectedRows == 0){
@@ -77,8 +78,10 @@ module.exports = {
                     )
                 });
             } else {
+                console.log('getUserResult[0]',getUserResult[0].salt);
                 const salt = getUserResult[0].salt;
                 const hashedPassword = await encryptionManager.encryption(pw, salt)
+                console.log('hashedPassword',hashedPassword,"pw    ",pw)
                 if(getUserResult[0].userPw != hashedPassword){
                     resolve({
                         code: statusCode.BAD_REQUEST,
