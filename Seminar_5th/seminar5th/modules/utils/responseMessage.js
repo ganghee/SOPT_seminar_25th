@@ -1,4 +1,3 @@
-
 module.exports = {
     NULL_VALUE: "필요한 값이 없습니다.",
     OUT_OF_VALUE: "파라미터 값이 잘못 되었습니다.",
@@ -8,7 +7,6 @@ module.exports = {
     INVALID_TOKEN:"토큰을 사용할 수 없습니다.",
     LOGIN_SUCCESS:"로그인이 성공하였습니다.",
     SIGNUP_SUCCESS:"회원가입에 성공하였습니다.",
-    MISS_MATCH_PW: '비밀번호가 일치하지 않습니다',
     INTERNAL_SERVER_ERROR: '서버 내부 오류',
     DB_ERROR: '디비 내부 오류',
     DB_REFERENCE_ERROR: '잘못된 외래키입니다.',

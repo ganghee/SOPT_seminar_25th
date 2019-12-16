@@ -1,163 +1,92 @@
-const statusCode = require('../modules/utils/statusCode');
-const responseMessage = require('../modules/utils/responseMessage');
-const authUtil = require('../modules/utils/authUtil');
 let moment = require('moment');
 const jwtExt = require('../modules/security/jwt-ext');
 const encryptionManager = require('../modules/security/encryptionManager');
 const db = require('../modules/db/pool');
-
-const THIS_LOG = '사용자 정보';
+const { NotMatchedError, ParameterError, DatabaseError, MissPasswordError, DuplicatedEntryError } = require('../errors');
+const TABLE = 'user';
 
 module.exports = {
-    signUp: ({
+    signUp: async({
         id,
         pw
     }) => {
-        return new Promise(async(resolve,reject) => {
-            if(!id || !pw){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            }
-            //유저가 있으면 생성 X
-            const getUserQuery = "SELECT * FROM user WHERE userId = ?";
-            const getUserResult = await db.queryParam_Parse(getUserQuery,[id]);
-            if(typeof(getUserResult) == 'undefined' || getUserResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.DB_ERROR,
-                    json: authUtil.successFalse(
-                        responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            const salt = await encryptionManager.makeRandomByte();
-            const hashedPassword = await encryptionManager.encryption(pw,salt);
-            let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
-            const postUserQuery = "INSERT INTO user(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)";
-            const postUserResult = await db.queryParam_Parse(postUserQuery,[id, hashedPassword, date, salt]);
-            if(typeof(postUserResult) == 'undefined' || postUserResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.UNAUTHORIZED,
-                    json: authUtil.successFalse(
-                        responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_CREATE_SUCCESS(THIS_LOG)
-                )
-            });
-            }
-        );
-    },
-    signIn:({
+        console.log("1");
+        if(!id || !pw) throw new ParameterError
+        console.log("2");
+        const getQuery = `SELECT * FROM ${TABLE} WHERE userId = ?`;
+        console.log("3");
+        const getValues = [id];
+        const getResult = await db.queryParam_Parse(getQuery, getValues);
+        console.log("4");
+        console.log('getResult', getResult.length);
+        if(typeof(getResult) == 'undefined'){
+            throw new DatabaseError();
+        } else if(getResult.length > 0){
+            throw new DuplicatedEntryError();
+        }
+        const salt =  encryptionManager.makeRandomByte();
+        const hashedPassword =  encryptionManager.encryption(pw,salt);
+        let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
+        const postQuery = "INSERT INTO user(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)";
+        const postValues = [id, hashedPassword, date, salt];
+        const postResult =  db.queryParam_Parse(postQuery, postValues);
+        if(typeof(postResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(postResult.affectedRows == 0){
+            throw new NotMatchedError
+        }
+    }
+    ,
+    signIn: async ({
         id,
         pw
     }) => {
-        return new Promise(async(resolve, reject) => {
-            if(!id || !pw){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            }
-            const getUserQuery = "SELECT * FROM user WHERE userId = ?";
-            const getUserResult = await db.queryParam_Parse(getUserQuery,[id]);
-            if(typeof(getUserResult) == 'undefined' ||getUserResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.DB_ERROR,
-                    json: authUtil.successFalse(
-                        responseMessage.X_CREATE_FAIL(THIS_LOG)
-                    )
-                });
-            } else {
-                console.log('getUserResult[0]',getUserResult[0].salt);
-                const salt = getUserResult[0].salt;
-                const hashedPassword = await encryptionManager.encryption(pw, salt)
-                console.log('hashedPassword',hashedPassword,"pw    ",pw)
-                if(getUserResult[0].userPw != hashedPassword){
-                    resolve({
-                        code: statusCode.BAD_REQUEST,
-                        json: authUtil.successFalse(
-                            responseMessage.MISS_MATCH_PW
-                        )
-                    });
-                }
-                let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
-                const jwtToken = jwtExt.publish({id,date})
-                resolve({
-                    code: statusCode.OK,
-                    json: authUtil.successTrue(
-                        responseMessage.LOGIN_SUCCESS,
-                        {token :jwtToken.token}
-                    )
-                })
-            }
-        });
-    
-    },
-    update: ({
-        pw
-    },token) => {
-        return new Promise(async(resolve, reject) => {
-            if(!pw){
-                resolve({
-                    code: statusCode.NOT_FOUND,
-                    json: authUtil.successFalse(
-                        responseMessage.NULL_VALUE
-                    )
-                });
-            }
+        if(!id || !pw) throw new ParameterError
+        const getQuery = "SELECT * FROM user WHERE userId = ?";
+        const getValues = [id];
+        const getResult = await db.queryParam_Parse(getQuery, getValues);
+        if(typeof(getResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(getResult.affectedRows == 0){
+            throw new NotMatchedError
+        } else {
+            const salt = getResult[0].salt;
+            const hashedPassword = await encryptionManager.encryption(pw, salt)
+            if(getResult[0].userPw != hashedPassword) throw new MissPasswordError
             let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
-            const id = jwtExt.verify(token).data.id
-            const jwtToken = jwtExt.publish({id,date}).token
-            const salt = await encryptionManager.makeRandomByte();
-            const hashedPassword = await encryptionManager.encryption(pw,salt);
-            const putUserQuery = "UPDATE user SET userPw = ?, salt = ? WHERE userId = ?";
-            const putUserResult = await db.queryParam_Parse(putUserQuery,[hashedPassword, salt, id]);
-            if(typeof(putUserResult) == 'undefined' || putUserResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.DB_ERROR,
-                    json: authUtil.successFalse(
-                        responseMessage.X_UPDATE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_UPDATE_SUCCESS(THIS_LOG),
-                    {token: jwtToken}
-                )
-            });
-        })
+            const jwtToken = jwtExt.publish({id,date})
+            return {token :jwtToken.token}
+        }
     },
-    remove: (token) => {
-        return new Promise(async(resolve, reject) => {
-            const id = jwtExt.verify(token).data.id
-            const deleteUserQuery = "DELETE FROM user WHERE userId = ?";
-            const deleteUserResult = await db.queryParam_Parse(deleteUserQuery,[id]);
-            if(typeof(deleteUserResult) == 'undefined' || deleteUserResult.affectedRows == 0){
-                resolve({
-                    code: statusCode.DB_ERROR,
-                    json: authUtil.successFalse(
-                        responseMessage.X_DELETE_FAIL(THIS_LOG)
-                    )
-                });
-            }
-            resolve({
-                code: statusCode.OK,
-                json: authUtil.successTrue(
-                    responseMessage.X_DELETE_SUCCESS(THIS_LOG)
-                )
-            });
-        })
+    update: async(
+        {pw},
+        token
+    ) => {
+        if(!pw) throw new ParameterError
+        let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss")
+        const id = jwtExt.verify(token).data.id
+        const jwtToken = jwtExt.publish({id,date}).token
+        const salt = await encryptionManager.makeRandomByte();
+        const hashedPassword = await encryptionManager.encryption(pw,salt);
+        const putQuery = "UPDATE user SET userPw = ?, salt = ? WHERE userId = ?";
+        const putValues = [hashedPassword, salt, id];
+        const putResult = await db.queryParam_Parse(putQuery, putValues);
+        if(typeof(putResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(putResult.affectedRows == 0){
+            throw new NotMatchedError
+        }
+        return {token: jwtToken}
+    },
+    remove: async(token) => {
+        const id = jwtExt.verify(token).data.id
+        const deleteQuery = "DELETE FROM user WHERE userId = ?";
+        const deleteValues = [id];
+        const deleteResult = await db.queryParam_Parse(deleteQuery, deleteValues);
+        if(typeof(deleteResult) == 'undefined'){
+            throw new DatabaseError;
+        } else if(deleteResult.affectedRows == 0){
+            throw new NotMatchedError
+        }
     }
 }

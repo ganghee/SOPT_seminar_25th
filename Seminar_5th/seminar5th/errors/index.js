@@ -6,4 +6,5 @@ module.exports = {
     AuthorizationError: require('./AuthorizationError'),
     TokenExpiredError: require('./TokenExpiredError'),
     DuplicatedEntryError: require('./DuplicatedEntryError'),
+    MissPasswordError: require('./MissPasswordError'),
 };
