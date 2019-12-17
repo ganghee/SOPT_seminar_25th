@@ -44,7 +44,7 @@ const comment = {
             return comment;
     },
     readAll: async (articleIdx) => {
-            const query = 'SELECT * FROM comment WHERE articleIdx = ?';
+            const query = `SELECT * FROM ${TABLE_NAME} WHERE articleIdx = ?`;
             const values = [articleIdx];
             const result = await db.queryParam_Parse(query, values);
             if(typeof(result) == 'undefined'){
@@ -104,7 +104,7 @@ const comment = {
             throw new DatabaseError;
         } else if(getResult.length == 0){
             throw new AuthorizationError(COMMENT)}
-        const deleteQuery = 'DELETE FROM comment WHERE articleIdx = ? AND commentIdx = ? AND writer = ?';
+        const deleteQuery = `DELETE FROM ${TABLE_NAME} WHERE articleIdx = ? AND commentIdx = ? AND writer = ?`;
         const deleteResult = await db.queryParam_Parse(deleteQuery,[articleIdx, commentIdx, writer]);
         if(typeof(deleteResult) == 'undefined'){
             throw new DatabaseError;

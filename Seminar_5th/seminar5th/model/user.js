@@ -31,7 +31,7 @@ module.exports = {
         const salt = await encryptionManager.makeRandomByte();
         const hashedPassword =  encryptionManager.encryption(pw,salt);
         let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss");
-        const postQuery = "INSERT INTO user(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)";
+        const postQuery = `INSERT INTO ${TABLE}(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)`;
         const postValues = [id, hashedPassword, date, salt];
         const postResult = await db.queryParam_Parse(postQuery, postValues);
         if(typeof(postResult) == 'undefined'){
@@ -45,7 +45,7 @@ module.exports = {
         pw
     }) => {
         if(!id || !pw) throw new ParameterError
-        const getQuery = "SELECT * FROM user WHERE userId = ?";
+        const getQuery = `SELECT * FROM ${TABLE} WHERE userId = ?`;
         const getValues = [id];
         const getResult = await db.queryParam_Parse(getQuery, getValues);
         if(typeof(getResult) == 'undefined'){
@@ -70,7 +70,7 @@ module.exports = {
         const jwtToken = jwtExt.publish({id,date}).token;
         const salt = await encryptionManager.makeRandomByte();
         const hashedPassword = await encryptionManager.encryption(pw,salt);
-        const putQuery = "UPDATE user SET userPw = ?, salt = ? WHERE userId = ?";
+        const putQuery = `UPDATE ${TABLE} SET userPw = ?, salt = ? WHERE userId = ?`;
         const putValues = [hashedPassword, salt, id];
         const putResult = await db.queryParam_Parse(putQuery, putValues);
         if(typeof(putResult) == 'undefined'){
@@ -82,7 +82,7 @@ module.exports = {
     },
     remove: async(token) => {
         const id = jwtExt.verify(token).data.id;
-        const deleteQuery = "DELETE FROM user WHERE userId = ?";
+        const deleteQuery = `DELETE FROM ${TABLE} WHERE userId = ?`;
         const deleteValues = [id];
         const deleteResult = await db.queryParam_Parse(deleteQuery, deleteValues);
         if(typeof(deleteResult) == 'undefined'){

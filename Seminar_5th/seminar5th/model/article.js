@@ -33,7 +33,7 @@ const article = {
                 throw new NotCreatedError(ARTICLE);
             }
             for(var i in image) {
-                const imageQuery = 'INSERT INTO articleImage(articleImageUrl, articleIdx) VALUES(?, ?)';
+                const imageQuery = `INSERT INTO ${TABLE_NAME_ARTICLE_IMAGE}(articleImageUrl, articleIdx) VALUES(?, ?)`;
                 const imageValues = [image[i].location, result.insertId];
                 const imageResult = await pool.queryParam_Parse(imageQuery, imageValues);
                 if(typeof(imageResult) == 'undefined'){
@@ -138,14 +138,14 @@ const article = {
         blogIdx, 
         token) => {
             const writer = jwtExt.verify(token).data.id
-            const getQuery = 'SELECT * FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
+            const getQuery = `SELECT * FROM ${TABLE_NAME_ARTICLE} WHERE blogIdx = ? AND articleIdx = ? AND writer = ?`;
             const getValues = [blogIdx, articleIdx, writer];
             const getResult = await pool.queryParam_Parse(getQuery, getValues);
             if(typeof(getResult) == 'undefined'){
                 throw new DatabaseError;
             } else if(getResult.length == 0){
                 throw new AuthorizationError(ARTICLE)}
-            const deleteQuery = 'DELETE FROM article WHERE blogIdx = ? AND articleIdx = ? AND writer = ?';
+            const deleteQuery = `DELETE FROM ${TABLE_NAME_ARTICLE} WHERE blogIdx = ? AND articleIdx = ? AND writer = ?`;
             const deleteValues = [blogIdx, articleIdx, writer];
             const deleteResult = await pool.queryParam_Parse(deleteQuery, deleteValues);
             if(typeof(deleteResult) == 'undefined'){
