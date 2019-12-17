@@ -7,6 +7,6 @@ router.get('/', CommentsControllers.readAll);
 router.get('/:commentIdx', CommentsControllers.read);
 router.post('/', LoggedIn, CommentsControllers.create);
 router.put('/', LoggedIn, CommentsControllers.update);
-router.delete('/', LoggedIn, CommentsControllers.remove);
+router.delete('/', LoggedIn, CommentsControllers.delete);
 
 module.exports = router;

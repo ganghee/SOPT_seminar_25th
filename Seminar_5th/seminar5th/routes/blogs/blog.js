@@ -7,6 +7,6 @@ router.get('/', blogsControllers.readAll);
 router.get('/:blogIdx', blogsControllers.read);
 router.post('/',LoggedIn, blogsControllers.create);
 router.put('/', LoggedIn, blogsControllers.update);
-router.delete('/', LoggedIn, blogsControllers.remove);
+router.delete('/', LoggedIn, blogsControllers.delete);
 
 module.exports = router;

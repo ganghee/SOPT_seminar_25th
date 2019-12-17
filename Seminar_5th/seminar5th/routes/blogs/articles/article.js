@@ -8,6 +8,6 @@ router.get('/', ArticlesController.readAll);
 router.get('/:articleIdx', ArticlesController.read);
 router.post('/', LoggedIn, upload.array('image',3), ArticlesController.create);
 router.put('/', LoggedIn, upload.array('image',3), ArticlesController.update);
-router.delete('/', LoggedIn, ArticlesController.remove);
+router.delete('/', LoggedIn, ArticlesController.delete);
 
 module.exports = router;
