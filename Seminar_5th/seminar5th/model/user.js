@@ -26,8 +26,7 @@ module.exports = {
         if(typeof(getResult) == 'undefined'){
             throw new DatabaseError;
         } else if(getResult.length > 0){
-            throw new ExistedUserError;
-        }
+            throw new ExistedUserError}
         const salt = await encryptionManager.makeRandomByte();
         const hashedPassword =  encryptionManager.encryption(pw,salt);
         let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss");
@@ -37,8 +36,7 @@ module.exports = {
         if(typeof(postResult) == 'undefined'){
             throw new DatabaseError;
         } else if(postResult.affectedRows == 0){
-            throw new NotCreatedError(name = NAME);
-        }
+            throw new NotCreatedError(NAME)}
     },
     signIn: async ({
         id,
@@ -51,8 +49,7 @@ module.exports = {
         if(typeof(getResult) == 'undefined'){
             throw new DatabaseError;
         } else if(getResult.length == 0){
-            throw new NotFoundError(name = NAME);
-        } 
+            throw new NotFoundError(NAME)} 
         const salt = getResult[0].salt;
         const hashedPassword = await encryptionManager.encryption(pw, salt);
         if(getResult[0].userPw != hashedPassword) throw new MissPasswordError;
@@ -76,8 +73,7 @@ module.exports = {
         if(typeof(putResult) == 'undefined'){
             throw new DatabaseError;
         } else if(putResult.affectedRows == 0){
-            throw new NotUpdatedError(name = NAME);
-        }
+            throw new NotUpdatedError(NAME)}
         return {token: jwtToken}
     },
     remove: async(token) => {
@@ -88,7 +84,6 @@ module.exports = {
         if(typeof(deleteResult) == 'undefined'){
             throw new DatabaseError;
         } else if(deleteResult.affectedRows == 0){
-            throw new NotDeletedError(name = NAME);
-        }
+            throw new NotDeletedError(NAME)}
     }
 }

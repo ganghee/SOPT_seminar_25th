@@ -30,8 +30,7 @@ const article = {
             if(typeof(result) == 'undefined'){
                 throw new DatabaseError;
             } else if(result.affectedRows == 0){
-                throw new NotCreatedError(ARTICLE);
-            }
+                throw new NotCreatedError(ARTICLE)}
             for(var i in image) {
                 const imageQuery = `INSERT INTO ${TABLE_NAME_ARTICLE_IMAGE}(articleImageUrl, articleIdx) VALUES(?, ?)`;
                 const imageValues = [image[i].location, result.insertId];
@@ -39,8 +38,7 @@ const article = {
                 if(typeof(imageResult) == 'undefined'){
                     throw new DatabaseError;
                 } else if(imageResult.affectedRows == 0){
-                    throw new NotCreatedError(ARTICLE_IMAGE);
-                }      
+                    throw new NotCreatedError(ARTICLE_IMAGE)}      
             }
     },
     read: async (articleIdx) => {
@@ -50,8 +48,7 @@ const article = {
         if(typeof(result) == 'undefined'){
             throw new DatabaseError;
         } else if(result.length == 0){
-            throw new NotFoundError(ARTICLE);
-        } 
+            throw new NotFoundError(ARTICLE)} 
         const imageQuery = `SELECT * FROM ${TABLE_NAME_ARTICLE_IMAGE} WHERE articleIdx = ?`;
         const imageValues = [articleIdx];
         const imageResult = await pool.queryParam_Parse(imageQuery, imageValues);
@@ -59,13 +56,12 @@ const article = {
         if(typeof(imageResult) == 'undefined'){
             throw new DatabaseError;
         } else if(imageResult.length == 0){
-                imageArr = []} 
+            imageArr = []} 
         imageResult.forEach((rawArticle, index, result) => 
             imageArr.push(articleImageData(rawArticle).articleImageUrl));
         const article = articleData(result[0]);
         article.imageArr = imageArr;
         return article;
-        
     },
     readAll: async (blogIdx) => {
         const query = `SELECT * FROM ${TABLE_NAME_ARTICLE} WHERE blogIdx = ?`;
@@ -82,10 +78,8 @@ const article = {
         for(var i in articleIdxArr){
             await article.read(articleIdxArr[i])
             .then(result => articleArr.push(result))
-            .catch(err => {throw new DatabaseError});
-        }
+            .catch(err => {throw new DatabaseError})}
         return articleArr;
-        
     },
     readAllArticle: async () => {
         const query = `SELECT * FROM ${TABLE_NAME_ARTICLE}`;
