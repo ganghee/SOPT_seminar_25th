@@ -4,7 +4,6 @@ const encryptionManager = require('../modules/security/encryptionManager');
 const db = require('../modules/db/pool');
 const { 
     ParameterError,
-    DatabaseError,
     MissPasswordError,
     NotCreatedError,
     NotFoundError,
@@ -23,20 +22,14 @@ module.exports = {
         const getQuery = `SELECT * FROM ${TABLE} WHERE userId = ?`;
         const getValues = [id];
         const getResult = await db.queryParam_Parse(getQuery, getValues);
-        if(typeof(getResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(getResult.length > 0){
-            throw new ExistedUserError}
+        if(getResult.length > 0) throw new ExistedUserError;
         const salt = await encryptionManager.makeRandomByte();
         const hashedPassword =  encryptionManager.encryption(pw,salt);
         let date = moment(moment().unix()*1000).format("YYYY-MM-DD HH:mm:ss");
         const postQuery = `INSERT INTO ${TABLE}(userId, userPw, signupDate, salt) VALUES(?, ?, ?, ?)`;
         const postValues = [id, hashedPassword, date, salt];
         const postResult = await db.queryParam_Parse(postQuery, postValues);
-        if(typeof(postResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(postResult.affectedRows == 0){
-            throw new NotCreatedError(NAME)}
+        if(postResult.affectedRows == 0) throw new NotCreatedError(NAME);
     },
     signIn: async ({
         id,
@@ -46,10 +39,7 @@ module.exports = {
         const getQuery = `SELECT * FROM ${TABLE} WHERE userId = ?`;
         const getValues = [id];
         const getResult = await db.queryParam_Parse(getQuery, getValues);
-        if(typeof(getResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(getResult.length == 0){
-            throw new NotFoundError(NAME)} 
+        if(getResult.length == 0) throw new NotFoundError(NAME);
         const salt = getResult[0].salt;
         const hashedPassword = await encryptionManager.encryption(pw, salt);
         if(getResult[0].userPw != hashedPassword) throw new MissPasswordError;
@@ -70,10 +60,7 @@ module.exports = {
         const putQuery = `UPDATE ${TABLE} SET userPw = ?, salt = ? WHERE userId = ?`;
         const putValues = [hashedPassword, salt, id];
         const putResult = await db.queryParam_Parse(putQuery, putValues);
-        if(typeof(putResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(putResult.affectedRows == 0){
-            throw new NotUpdatedError(NAME)}
+        if(putResult.affectedRows == 0) throw new NotUpdatedError(NAME);
         return {token: jwtToken}
     },
     remove: async(token) => {
@@ -81,9 +68,6 @@ module.exports = {
         const deleteQuery = `DELETE FROM ${TABLE} WHERE userId = ?`;
         const deleteValues = [id];
         const deleteResult = await db.queryParam_Parse(deleteQuery, deleteValues);
-        if(typeof(deleteResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(deleteResult.affectedRows == 0){
-            throw new NotDeletedError(NAME)}
+        if(deleteResult.affectedRows == 0) throw new NotDeletedError(NAME);
     }
 }

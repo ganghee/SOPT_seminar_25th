@@ -2,8 +2,7 @@ const db = require('../modules/db/pool');
 const blogData = require('../modules/data/blogData');
 const jwtExt = require('../modules/security/jwt-ext');
 const {
-    ParameterError, 
-    DatabaseError, 
+    ParameterError,
     NotUpdatedError, 
     NotCreatedError,
     NotDeletedError,
@@ -22,19 +21,13 @@ const blog = {
         const query = `INSERT INTO ${TABLE_NAME}(title, content, writer) VALUES (?, ?, ?)`;
         const values = [title, content, writer];
         const result = await db.queryParam_Parse(query, values);
-        if(typeof(result) == 'undefined'){
-            throw new DatabaseError;
-        } else if(result.affectedRows == 0){
-            throw new NotCreatedError(CATEGORY);}
+        if(result.affectedRows == 0) throw new NotCreatedError(CATEGORY);
     },
     read: async(blogIdx) => {
         const query = `SELECT * FROM ${TABLE_NAME} WHERE blogIdxㄷ = ?`;
         const values = [blogIdx];
         const result = await db.queryParam_Parse(query, values);
-        if(typeof(result) == 'undefined'){
-            throw new DatabaseError;
-        } else if(result.length == 0){
-            throw new NotFoundError(CATEGORY)}
+        if(result.length == 0) throw new NotFoundError(CATEGORY);
         const blog = blogData(result[0]);
         return blog;
         
@@ -42,10 +35,7 @@ const blog = {
     readAll: async() => {
         const query = `SELECT * FROM ${TABLE_NAME}`;
         const result = await db.queryParam_None(query);
-        if(typeof(result) == 'undefined'){
-            throw new DatabaseError;
-        }else if(result.length == 0){
-            throw new NotFoundError(CATEGORY)}
+        if(result.length == 0) throw new NotFoundError(CATEGORY);
         const blogArr = [];
         result.forEach((rawBlog, index, result) => 
             blogArr.push(blogData(rawBlog)));
@@ -61,17 +51,11 @@ const blog = {
         const getQuery = `SELECT * FROM ${TABLE_NAME} WHERE blogIdx = ? AND writer = ?`;
         const getValues = [blogIdx, writer];
         const getResult = await db.queryParam_Parse(getQuery, getValues);
-        if(typeof(getResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(getResult.length == 0){
-            throw new AuthorizationError(CATEGORY)}
+        if(getResult.length == 0) throw new AuthorizationError(CATEGORY);
         const putQuery = `UPDATE ${TABLE_NAME} SET title = ?, content = ?, writer = ? WHERE blogIdx = ?`;
         const putValues = [title, content, writer, blogIdx];
         const putResult = await db.queryParam_Parse(putQuery, putValues);
-        if(typeof(putResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(putResult.affectedRows == 0){
-            throw new NotUpdatedError(CATEGORY)}
+        if(putResult.affectedRows == 0) throw new NotUpdatedError(CATEGORY);
     },
     delete: async (
         {blogIdx}
@@ -80,17 +64,11 @@ const blog = {
         const getQuery = `SELECT * FROM ${TABLE_NAME} WHERE blogIdx = ? AND writer = ?`;
         const getValues = [blogIdx, writer];
         const getResult = await db.queryParam_Parse(getQuery, getValues);
-        if(typeof(getResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(getResult.length == 0){
-            throw new AuthorizationError(CATEGORY)}
+        if(getResult.length == 0) throw new AuthorizationError(CATEGORY);
         const deleteQuery = `DELETE FROM ${TABLE_NAME} WHERE blogIdx = ? AND writer = ?`;
         const deleteValues = [blogIdx, writer];
         const deleteResult = await db.queryParam_Parse(deleteQuery, deleteValues);
-        if(typeof(deleteResult) == 'undefined'){
-            throw new DatabaseError;
-        } else if(deleteResult.affectedRows == 0){
-            throw new NotDeletedError(CATEGORY)}
+        if(deleteResult.affectedRows == 0) throw new NotDeletedError(CATEGORY);
     }
 }
 module.exports = blog;

@@ -41,6 +41,7 @@ module.exports = {
             const connection = await pool.getConnection();
             try {
                 result = await connection.query(query, value) || null;
+                console.log('result',result)
             } catch (queryError) {
                 connection.rollback(() => {});
                 if(queryError.errno == 1452) {
